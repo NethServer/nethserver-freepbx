@@ -1,0 +1,5 @@
+#
+# 10base - nethserver-freepbx
+#
+ProxyPassMatch ^/freepbx/(.*\.php)$ fcgi://127.0.0.1:960/var/www/html/admin/$1
+Alias /freepbx /var/www/html/admin
