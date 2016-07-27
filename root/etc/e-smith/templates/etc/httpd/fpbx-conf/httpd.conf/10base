@@ -280,8 +280,3 @@ AddDefaultCharset UTF-8
 EnableSendfile on
 
 Include conf.d/php.conf
-
-# Supplemental configuration
-#
-# Load config files in the "/etc/httpd/fpbx-conf.d" directory, if any.
-IncludeOptional fpbx-conf.d/*.conf

@@ -28,10 +28,19 @@ perl createlinks
 rm -rf %{buildroot}
 (cd root ; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
+mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
+
+%dir %{_nseventsdir}/%{name}-update
+
+%attr(0644,root,root) %ghost %{_sysconfdir}/httpd/fpbx-conf/httpd.conf
+%attr(0700,root,root) %dir %{_localstatedir}/log/httpd-fpbx
+%attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/access_log
+%attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/error_log
+%config(noreplace) /etc/sysconfig/httpd-fpbx
 
 %changelog
 * Fri Jul 26 2016 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.0.1
