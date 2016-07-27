@@ -1,1 +1,28 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
+#
+# Copyright (C) 2015 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+#
+# This script is part of NethServer Enterprise
+# All rights are reserved
+#
+
+use esmith::Build::CreateLinks qw(:all);
+
+
+#
+# nethserver-freepbx-update and nethserver-freepbx-save event
+#
+event_templates('nethserver-freepbx-update', qw(
+   /etc/httpd/conf.d/freepbx.conf
+   /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+));
+
+event_actions('nethserver-freepbx-update', qw(
+    initialize-default-databases        00
+));
+
+event_services('nethserver-freepbx-update', qw(
+    httpd restart
+    rh-php56-php-fpm restart
+));
