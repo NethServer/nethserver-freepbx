@@ -1,0 +1,17 @@
+[Unit]
+Description=The Apache HTTP Server instance for FreePBX
+After=network.target remote-fs.target nss-lookup.target
+Documentation=man:httpd(8)
+Documentation=man:apachectl(8)
+
+[Service]
+Type=notify
+EnvironmentFile=/etc/sysconfig/httpd-fpbx
+ExecStart=/usr/sbin/httpd -f /etc/httpd/fpbx-conf/httpd.conf -DFOREGROUND
+ExecReload=/usr/sbin/httpd -f /etc/httpd/fpbx-conf/httpd.conf -k graceful
+ExecStop=/bin/kill -WINCH ${MAINPID}
+KillSignal=SIGCONT
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

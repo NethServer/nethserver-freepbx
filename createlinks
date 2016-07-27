@@ -7,8 +7,8 @@
 # All rights are reserved
 #
 
+use strict;
 use esmith::Build::CreateLinks qw(:all);
-
 
 #
 # nethserver-freepbx-update and nethserver-freepbx-save event
