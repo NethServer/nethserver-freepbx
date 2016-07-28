@@ -6,7 +6,8 @@
 ; the variable $pool can we used in any directive and will be replaced by the
 ; pool name ('www' here)
 [www]
-env[PATH] = '/opt/rh/rh-php56/root/bin/php:/opt/rh/rh-php56/root/usr/bin/php:$PATH'
+env[PATH] = '/opt/rh/rh-php56/root/bin:/opt/rh/rh-php56/root/usr/bin:$PATH'
+clear_env = no
 
 user = asterisk
 group = asterisk

@@ -25,5 +25,6 @@ event_actions('nethserver-freepbx-update', qw(
 
 event_services('nethserver-freepbx-update', qw(
     httpd restart
+    httpd-fpbx restart
     rh-php56-php-fpm restart
 ));
