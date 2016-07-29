@@ -5,10 +5,11 @@ if [[ -d /usr/src/freepbx.INSTALLED ]] ; then
     exit 0
 fi
 
+cd /usr/src/freepbx
 mkdir -p /var/lib/asterisk/sounds/custom/
 
 # run install
-/usr/bin/scl enable rh-php56 "/usr/src/freepbx/install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
+/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
 
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
@@ -32,7 +33,8 @@ chmod -R 755 /etc/asterisk
 mkdir -p /etc/asterisk/keys
 chmod 750 /etc/asterisk/keys
 
-mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
-
 # refresh fpbx signatures of files
 /usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole ma refreshsignatures'
+
+mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
+
