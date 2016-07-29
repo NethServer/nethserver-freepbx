@@ -34,7 +34,9 @@ mkdir -p /etc/asterisk/keys
 chmod 750 /etc/asterisk/keys
 
 # refresh fpbx signatures of files
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole chown'
 /usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole ma refreshsignatures'
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole r'
 
 mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
 
