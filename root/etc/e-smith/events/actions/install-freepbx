@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# check if fpbx is installed in a better way
+if [[ -d /usr/src/freepbx.INSTALLED ]] ; then
+    exit 0
+fi
+
+cd /usr/src/freepbx
+mkdir -p /var/lib/asterisk/sounds/custom/
+
+# run install
+/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
+
+touch /var/log/asterisk/fail2ban
+touch /var/log/asterisk/freepbx_security.log
+touch /var/log/asterisk/cdr-csv/Master.csv
+
+chmod 666 /var/log/asterisk/cdr-csv/Master.csv
+chmod 755 /var/spool/asterisk/monitor
+
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole chown'
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole r'
+
+/usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
+/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
+
+mkdir -p /var/log/pbx/install
+mkdir -p /var/log/pbx/upgrade
+
+chown -R asterisk.asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/
+
+chmod -R 755 /etc/asterisk
+mkdir -p /etc/asterisk/keys
+chmod 750 /etc/asterisk/keys
+
+# refresh fpbx signatures of files
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole ma refreshsignatures'
+
+mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
+

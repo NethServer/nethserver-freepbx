@@ -1,0 +1,6 @@
+#
+# This file can be used to set additional environment variables for
+# the httpd-fpbx process, or pass additional options to the httpd-fpbx
+# executable.
+#
+LANG=C
