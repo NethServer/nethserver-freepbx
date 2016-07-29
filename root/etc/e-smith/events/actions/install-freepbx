@@ -18,8 +18,8 @@ touch /var/log/asterisk/cdr-csv/Master.csv
 chmod 666 /var/log/asterisk/cdr-csv/Master.csv
 chmod 755 /var/spool/asterisk/monitor
 
-/usr/sbin/fwconsole chown
-/usr/sbin/fwconsole r
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole chown'
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole r'
 
 /usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
 /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
