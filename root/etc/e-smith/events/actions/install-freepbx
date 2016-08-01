@@ -5,18 +5,20 @@ if [[ -d /usr/src/freepbx.INSTALLED ]] ; then
     exit 0
 fi
 
-cd /usr/src/freepbx
 mkdir -p /var/lib/asterisk/sounds/custom/
 
 # wait for asterisk
-for i in $(seq 0 300); do 
+systemctl start asterisk
+for i in $(seq 0 300); do
     /usr/sbin/asterisk -rx "core show version" 2>1 > /dev/null
-    if [[ $(echo $?) == 0 ]] ; then 
+    if [[ $(echo $?) == 0 ]] ; then
         break
     fi
     sleep 1
 done
+
 # run install
+cd /usr/src/freepbx
 /usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
 
 touch /var/log/asterisk/fail2ban
