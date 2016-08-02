@@ -4,3 +4,6 @@
 
 ProxyPass /freepbx http://127.0.0.1:960/freepbx
 ProxyPassReverse /freepbx http://127.0.0.1:960/freepbx
+
+ProxyPass /ucp http://127.0.0.1:960/freepbx/ucp
+ProxyPassReverse /ucp http://127.0.0.1:960/freepbx/ucp
