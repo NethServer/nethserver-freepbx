@@ -29,8 +29,10 @@ chmod 666 /var/log/asterisk/cdr-csv/Master.csv
 chmod 755 /var/spool/asterisk/monitor
 
 # refresh fpbx signatures of files and reload
+echo -e "[modules]\nautoload=yes" >> /etc/asterisk/asterisk.conf
 /usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole chown'
 /usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole r'
+/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole restart'
 
 /usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
 /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
