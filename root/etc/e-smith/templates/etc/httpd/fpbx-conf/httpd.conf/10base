@@ -15,21 +15,36 @@ Group asterisk
 
 ServerAdmin root@localhost
 
+# ignore freepbx issue on read .htaccess
+SetEnv HTACCESS on
+
 <Directory />
-    AllowOverride none
+    AllowOverride All
     Require all denied
 </Directory>
 
 DocumentRoot "/var/www/html"
 
 <Directory "/var/www">
-    AllowOverride None
+    AllowOverride All
     Require all granted
 </Directory>
 
 <Directory "/var/www/html">
     Options Indexes FollowSymLinks
-    AllowOverride None
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory "/var/www/html/freepbx">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+
+<Directory "/var/www/html/freepbx/ucp">
+    Options Indexes FollowSymLinks
+    AllowOverride All
     Require all granted
 </Directory>
 

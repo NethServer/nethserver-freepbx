@@ -3,7 +3,7 @@
 #
 
 [www]
-env[PATH] = '/opt/rh/rh-php56/root/bin:/opt/rh/rh-php56/root/usr/bin:$PATH'
+env[PATH] = '/opt/rh/rh-php56/root/bin:/opt/rh/rh-php56/root/usr/bin:/usr/bin:$PATH'
 clear_env = no
 
 user = asterisk
