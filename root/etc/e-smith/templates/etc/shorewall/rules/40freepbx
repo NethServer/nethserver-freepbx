@@ -1,0 +1,20 @@
+
+#
+# 40freepbx
+#
+{
+    my $iax = $freepbx{'AllowExternalIAX'} || 'disabled';
+    my $webrtc = $freepbx{'AllowExternalWebRTC'} || 'disabled';
+    if ($iax eq 'enabled') {
+        $OUT .= "# Enable IAX from red interfaces\n";
+        $OUT .= "?COMMENT Enable IAX from red interfaces\n";
+        $OUT .= "ACCEPT\tnet\t\$FW\tudp\t4569,5036\n";
+    }
+    if ($webrtc eq 'enabled') {
+        $OUT .= "# Enable WebRTC from red interfaces\n";
+        $OUT .= "?COMMENT Enable WebRTC from red interfaces\n";
+        $OUT .= "ACCEPT\tnet\t\$FW\ttcp\t8089\n";
+    }
+
+    $OUT .= "?COMMENT\n";
+}
