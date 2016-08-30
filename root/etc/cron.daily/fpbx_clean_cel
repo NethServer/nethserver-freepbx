@@ -1,0 +1,1 @@
+/usr/bin/mysql asteriskcdrdb  --defaults-file=/root/.my.cnf -e 'DELETE  FROM `cel` WHERE `eventtime` < NOW() - INTERVAL 180 DAY' 2>1  >/dev/null
