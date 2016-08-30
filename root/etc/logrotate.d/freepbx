@@ -1,0 +1,43 @@
+/var/log/asterisk/freepbx.log
+/var/log/asterisk/freepbx_debug
+/var/log/asterisk/freepbx_dbug
+/var/log/asterisk/freepbx_security.log
+/var/log/asterisk/fail2ban
+/var/log/asterisk/ucp_forever.log
+/var/log/asterisk/ucp_out.log
+/var/log/asterisk/ucp_err.log
+/var/log/asterisk/presence.log
+/var/log/asterisk/cdr-csv/Master.csv
+/var/log/asterisk/login.log {
+   missingok
+   rotate 1
+   compress
+   weekly
+   create 0644 asterisk asterisk
+}
+
+/var/log/asterisk/event_log {
+   missingok
+   rotate 10
+   compress
+   weekly
+   create 0644 asterisk asterisk
+}
+
+/var/log/asterisk/queue_log {
+   missingok
+   rotate 1
+   weekly
+   create 0644 asterisk asterisk
+}
+
+/var/log/asterisk/full {
+   missingok
+   rotate 10
+   compress
+   weekly
+   create 0644 asterisk asterisk
+   postrotate
+       /usr/sbin/asterisk -rx 'logger reload' &> /dev/null
+   endscript
+}
