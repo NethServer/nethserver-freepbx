@@ -1,10 +1,10 @@
 
 #
-# 40freepbx
+# 40asterisk
 #
 {
-    my $iax = $freepbx{'AllowExternalIAX'} || 'disabled';
-    my $webrtc = $freepbx{'AllowExternalWebRTC'} || 'disabled';
+    my $iax = $asterisk{'AllowExternalIAX'} || 'disabled';
+    my $webrtc = $asterisk{'AllowExternalWebRTC'} || 'disabled';
     if ($iax eq 'enabled') {
         $OUT .= "# Enable IAX from red interfaces\n";
         $OUT .= "?COMMENT Enable IAX from red interfaces\n";

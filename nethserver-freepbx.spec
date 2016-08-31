@@ -22,6 +22,7 @@ nethserver-freepbx is the FreePBX configuration package for NethServer
 %setup -q
 
 %build
+%{makedocs}
 perl createlinks
 
 %install
