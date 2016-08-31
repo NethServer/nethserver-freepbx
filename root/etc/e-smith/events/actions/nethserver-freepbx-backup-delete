@@ -1,0 +1,58 @@
+#!/usr/bin/perl -w
+
+#
+# Copyright (C) 2016 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+my $astdir = "/var/lib/asterisk";
+
+$status1 = 1;
+$status2 = 1;
+#Dump astdb 
+
+if ( -r "$astdir/astdb.sqlite3.dump"){
+    $status1 = unlink("$astdir/astdb.sqlite3.dump");
+} else {
+    warn("FreePBX post-backup Warning: astdb dump not found");
+}
+
+if ( -r "$astdir/asterisk.dump"){
+    $status2 = unlink("$astdir/asterisk.dump");
+} else {
+    warn("FreePBX post-backup Warning: asterisk database dump not found");
+}
+
+if ($status1 != 1)
+{
+      bad_exit("delete dump of astdb", $status1);
+}
+if ($status2 != 1)
+{
+      bad_exit("delete dump of asterisk database", $status2);
+}
+
+
+sub bad_exit
+{
+    my ($phase, $status) = @_;
+
+    warn("FreePBX post-backup Error! $phase - $status\n");
+    exit 10;
+}
+

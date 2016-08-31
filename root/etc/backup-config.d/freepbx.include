@@ -1,0 +1,6 @@
+/var/lib/asterisk/asterisk.dump
+/var/lib/asterisk/astdb.sqlite3.dump
+/var/lib/asterisk/licenses
+/etc/asterisk
+/etc/dahdi
+/etc/freepbx.conf
