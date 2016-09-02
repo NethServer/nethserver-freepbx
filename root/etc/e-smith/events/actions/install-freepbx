@@ -50,3 +50,4 @@ chmod 750 /etc/asterisk/keys
 
 mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
 
+exit 0
