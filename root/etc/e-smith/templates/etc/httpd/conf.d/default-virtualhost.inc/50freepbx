@@ -1,0 +1,6 @@
+#
+# 50freepbx
+#
+RewriteEngine On
+RewriteCond %\{HTTPS\} !=on
+RewriteRule ^/freepbx(/.*)?$  https://%\{HTTP_HOST\}/freepbx$1  [L,R=301]
