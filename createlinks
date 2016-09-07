@@ -29,3 +29,15 @@ event_services('nethserver-freepbx-update', qw(
     httpd-fpbx restart
     rh-php56-php-fpm restart
 ));
+
+#do backup in pre-backup
+event_link("nethserver-freepbx-backup", "pre-backup-config", "80");
+
+#remove backup files in post-backup-config
+event_link("nethserver-freepbx-backup-delete", "post-backup-config", "90");
+
+#restore backup in post-restore
+event_link("nethserver-freepbx-backup-restore", "post-restore-config", "80");
+
+#launch backup restore on package update/upgrade
+event_link("nethserver-freepbx-backup-restore", "nethserver-freepbx-update", "70");

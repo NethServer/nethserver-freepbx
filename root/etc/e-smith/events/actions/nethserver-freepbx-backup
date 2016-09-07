@@ -1,0 +1,54 @@
+#!/usr/bin/perl -w
+
+#
+# Copyright (C) 2016 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use NethServer::Password;
+
+my $astdir = "/var/lib/asterisk";
+
+#Dump astdb
+if ( -r "$astdir/astdb.sqlite3"){
+ if ($status = system ("/usr/bin/sqlite3 $astdir/astdb.sqlite3 .dump | grep -v \"VALUES('\\/SIP\\|VALUES('\\/RG\\|VALUES('\\/BLKVM\\|VALUES('\\/FM\\|VALUES('\\/dundi\\|VALUES('\\/\\/\\|VALUES('\\/IAX])\\|VALUES('\\/CALLTRACE\\|ccss\\/last_number\" > $astdir/astdb.sqlite3.dump"))
+  {
+      exit bad_exit("dump of astdb", $status);
+  }
+  if ($status = system ("/usr/bin/mysqldump --defaults-file=/root/.my.cnf --skip-dump-date asterisk > $astdir/asterisk.dump"))
+  {
+      exit bad_exit("dump of mysql asterisk db", $status);
+  }
+
+}
+
+
+sub bad_exit
+{
+    my ($phase, $status) = @_;
+
+    warn("FreePBX pre-backup failed! - $phase - status: $status\n");
+    if ( -r "$astdir/astdb.sqlite3.dump"){
+        unlink("$astdir/astdb.sqlite3.dump");
+    }
+    if ( -r "$astdir/asterisk.dump"){
+        unlink("$astdir/asterisk.dump");
+    }
+    return $status / 256;
+}
+
