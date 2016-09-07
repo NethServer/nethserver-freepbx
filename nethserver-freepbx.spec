@@ -42,6 +42,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/access_log
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/error_log
 %config(noreplace) /etc/sysconfig/httpd-fpbx
+%config /etc/dahdi/system.conf
 
 %changelog
 * Fri Jul 26 2016 Edoardo Spadoni <edoardo.spadoni@nethesis.it> - 0.0.1
