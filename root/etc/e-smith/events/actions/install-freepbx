@@ -50,4 +50,7 @@ chmod 750 /etc/asterisk/keys
 
 mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
 
+/bin/cp -vr `rpm -ql kmod-dahdi-linux | grep lib/modules/ | head -n 1`/dahdi  /lib/modules/`uname -r`/extra
+depmod -a
+
 exit 0
