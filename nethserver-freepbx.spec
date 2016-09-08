@@ -37,7 +37,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 
 %dir %{_nseventsdir}/%{name}-update
 
-%attr(0644,root,root) %ghost %{_sysconfdir}/httpd/fpbx-conf/httpd.conf
+%attr(0644,root,root) %config %{_sysconfdir}/httpd/fpbx-conf/httpd.conf
 %attr(0700,root,root) %dir %{_localstatedir}/log/httpd-fpbx
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/access_log
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/error_log
