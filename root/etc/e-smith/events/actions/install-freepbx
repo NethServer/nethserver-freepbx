@@ -42,10 +42,11 @@ sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/opt/rh/rh-php56/php.ini
 mkdir -p /var/log/pbx/install
 mkdir -p /var/log/pbx/upgrade
 
+mkdir -p /etc/asterisk/keys
+
 chown -R asterisk.asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/
 
 chmod -R 755 /etc/asterisk
-mkdir -p /etc/asterisk/keys
 chmod 750 /etc/asterisk/keys
 
 mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
