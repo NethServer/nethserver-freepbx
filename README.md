@@ -126,3 +126,12 @@ Asterisk 13 is installed from Sangoma FreePBX distro RPMs:
        gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
 
+Known Issues
+------------
+
+Security allert "You have 2 tampered files"
+
+        Module: "FreePBX Framework", File: "/var/www/html/freepbx/admin/libraries/utility.functions.php altered"
+        Module: "FreePBX Framework", File: "/var/www/html/freepbx/admin/modules/framework/install.php altered"
+
+Framework is patched on RPM %build to fix PHP require: scl provides PHP 5.6.5, but FreePBX require 5.6.19. http://community.freepbx.org/t/freepbx-and-php-5-6-19/36278/8
