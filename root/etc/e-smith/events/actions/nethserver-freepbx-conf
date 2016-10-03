@@ -5,6 +5,11 @@ if [[ -f /usr/src/freepbx/freepbx.INSTALLED ]] ; then
     exit 0
 fi
 
+#new install call install
+echo " *** Installing FreePBX *** see /var/log/freepbx_rpm_install.log"
+echo " *** Installing FreePBX" >> /var/log/freepbx_rpm_install.log
+/usr/bin/date >> /var/log/freepbx_rpm_install.log
+
 mkdir -p /var/lib/asterisk/sounds/custom/
 
 # wait for asterisk
@@ -19,7 +24,7 @@ done
 
 # run install
 cd /usr/src/freepbx
-/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
+/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1"
 
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
