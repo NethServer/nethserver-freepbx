@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # check if fpbx is installed in a better way
-if [[ -d /usr/src/freepbx.INSTALLED ]] ; then
+if [[ -f /usr/src/freepbx/freepbx.INSTALLED ]] ; then
     exit 0
 fi
 
@@ -49,4 +49,4 @@ chown -R asterisk:asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/soun
 chmod -R 755 /etc/asterisk
 chmod 750 /etc/asterisk/keys
 
-mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
+touch /usr/src/freepbx/freepbx.INSTALLED
