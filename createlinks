@@ -19,7 +19,7 @@ event_templates('nethserver-freepbx-update', qw(
 
 event_actions('nethserver-freepbx-update', qw(
     initialize-default-databases        00
-    install-freepbx                     50
+    nethserver-freepbx-conf             50
 ));
 
 event_services('nethserver-freepbx-update', qw(

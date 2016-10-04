@@ -1,9 +1,14 @@
 #!/bin/bash
 
 # check if fpbx is installed in a better way
-if [[ -d /usr/src/freepbx.INSTALLED ]] ; then
+if [[ -d /var/www/html/freepbx ]] ; then
     exit 0
 fi
+
+#new install call install
+echo " *** Installing FreePBX *** see /var/log/freepbx_rpm_install.log"
+echo " *** Installing FreePBX" >> /var/log/freepbx_rpm_install.log
+/usr/bin/date >> /var/log/freepbx_rpm_install.log
 
 mkdir -p /var/lib/asterisk/sounds/custom/
 
@@ -19,7 +24,7 @@ done
 
 # run install
 cd /usr/src/freepbx
-/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n"
+/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1"
 
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
@@ -44,14 +49,7 @@ mkdir -p /var/log/pbx/upgrade
 
 mkdir -p /etc/asterisk/keys
 
-chown -R asterisk.asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/
+chown -R asterisk:asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/
 
 chmod -R 755 /etc/asterisk
 chmod 750 /etc/asterisk/keys
-
-mv /usr/src/freepbx /usr/src/freepbx.INSTALLED
-
-/bin/cp -vr `rpm -ql kmod-dahdi-linux | grep lib/modules/ | head -n 1`/dahdi  /lib/modules/`uname -r`/extra
-depmod -a
-
-exit 0
