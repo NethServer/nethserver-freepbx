@@ -8,7 +8,7 @@ BuildArch: noarch
 
 BuildRequires: nethserver-devtools
 
-Requires: asterisk13, freepbx
+Requires: freepbx
 Requires: rh-php56, rh-php56-php-fpm
 Requires: rh-php56-php-mysql, rh-php56-php-pear, rh-php56-php-pdo
 Requires: rh-php56-php-process, rh-php56-php-xml, rh-php56-php-mbstring
