@@ -22,27 +22,12 @@ for i in $(seq 0 300); do
     sleep 1
 done
 
-# run install
-cd /usr/src/freepbx
-/usr/bin/scl enable rh-php56 "./install --dbuser root --dbpass $(grep 'password=' /root/.my.cnf | cut -d= -f2) --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1"
-
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
 touch /var/log/asterisk/cdr-csv/Master.csv
 
 chmod 666 /var/log/asterisk/cdr-csv/Master.csv
 chmod 755 /var/spool/asterisk/monitor
-
-# refresh fpbx signatures of files and reload
-echo -e "[modules]\nautoload=yes" >> /etc/asterisk/asterisk.conf
-/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole chown'
-/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole r'
-/usr/bin/scl enable rh-php56 '/usr/sbin/fwconsole restart'
-
-/usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
-/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
-
-sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/opt/rh/rh-php56/php.ini
 
 mkdir -p /var/log/pbx/install
 mkdir -p /var/log/pbx/upgrade
@@ -53,3 +38,7 @@ chown -R asterisk:asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/soun
 
 chmod -R 755 /etc/asterisk
 chmod 750 /etc/asterisk/keys
+
+sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/opt/rh/rh-php56/php.ini
+
+exit 0
