@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# check if fpbx is installed in a better way
+if [[ -d /var/www/html/freepbx ]] ; then
+    exit 0
+fi
+
+source /opt/rh/rh-php56/enable
+
+# run install
+pass=$(perl -e  'use NethServer::Password; print NethServer::Password::store('mysql');')
+cd /usr/src/freepbx
+./install --dbuser root --dbpass $pass --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1
+
+/usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
+/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
+
+# refresh fpbx signatures of files and reload
+echo -e "[modules]\nautoload=yes" >> /etc/asterisk/asterisk.conf
+/usr/sbin/fwconsole chown >> /var/log/freepbx_rpm_install.log 2>&1
+exec /usr/sbin/fwconsole r >> /var/log/freepbx_rpm_install.log 2>&1
+
