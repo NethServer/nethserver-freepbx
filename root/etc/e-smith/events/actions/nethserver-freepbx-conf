@@ -25,6 +25,7 @@ done
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
 touch /var/log/asterisk/cdr-csv/Master.csv
+touch /etc/asterisk/pjsip_wizard.conf
 
 chmod 666 /var/log/asterisk/cdr-csv/Master.csv
 chmod 755 /var/spool/asterisk/monitor
@@ -34,7 +35,7 @@ mkdir -p /var/log/pbx/upgrade
 
 mkdir -p /etc/asterisk/keys
 
-chown -R asterisk:asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/
+chown -R asterisk:asterisk /var/run/asterisk /var/log/pbx /var/lib/asterisk/sounds /etc/asterisk /var/log/asterisk/ /etc/asterisk/pjsip_wizard.conf
 
 chmod -R 755 /etc/asterisk
 chmod 750 /etc/asterisk/keys
