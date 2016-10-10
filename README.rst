@@ -2,7 +2,7 @@
 nethserver-freepbx
 ==================
 
-This package configure FreePBX and Asterisk for NethServer
+This package configures FreePBX and Asterisk for NethServer
 
 Installation
 ============
@@ -12,12 +12,12 @@ Installation
     yum --enablerepo=nethserver-testing clean all
     yum --enablerepo=nethserver-testing install nethserver-freepbx
 
-This install and configure MariaDB, Asterisk 13, FreePBX 14
+MariaDB, Asterisk 13 and FreePBX 14 will be installed and configured.
 
 FreePBX Modules
 ===============
 
-Since there are still a few modules on freepbx mirrors for 14, to see full list of all available modules you need to change FreePBX version to 13. This could have negative consequences, but allow you to install old modules that are probably compatible
+Since there are still a few modules on freepbx mirrors for 14, to see the full list of all available modules you need to change FreePBX version to 13. This could have negative consequences, but allows you to install old modules that are probably compatible.
 
 ::
 
@@ -26,7 +26,7 @@ Since there are still a few modules on freepbx mirrors for 14, to see full list 
 Backup
 ======
 
-FreePBX configuration is stored on mysql, nethserver-backup-data is neeeded to backup it
+FreePBX configuration is stored in mysql, nethserver-backup-data is neeeded to backup it.
 
 Open services from external networks
 ====================================
@@ -51,11 +51,11 @@ You can import your active directory user into freepbx by following this officia
 WebRTC
 ======
 
-You can create WebRTC extension by following this official guide from freepbx:
+You can create WebRTC extensions following this official guide from freepbx:
 
 [Setting up WebRTC on FreePBX](http://wiki.freepbx.org/display/FPG/WebRTC+Phone-UCP#WebRTCPhone-UCP-EnablingWebRTCPhoneforauser)
 
-After the installation of Certificate Manager and WebRTC modules there is a valid self-signed certificate that can be use for WebRTC.
+After the installation of Certificate Manager and WebRTC modules there is a valid self-signed certificate that can be used for WebRTC.
 
 How to test it
 --------------
@@ -69,7 +69,7 @@ How to test it
 
 3. Enable WebRTC
 
-4. Temporary disable the firewall: 
+4. Temporarly disable the firewall:
 
    ::
   
@@ -93,11 +93,11 @@ WebRTC clients:
 - http://jssip.net/
 - https://www.doubango.org/sipml5/
 
-Know bugs
----------
+Known bugs
+----------
 
 - WebRTC under Chrome is not allowed in HTTP
-- WebRTC in UCP module on FreepBX not works as expected. [Ref](http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
+- WebRTC in UCP module on FreepBX doesn't work as expected. [Ref](http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
 
 Asterisk
 ========
