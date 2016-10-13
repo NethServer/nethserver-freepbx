@@ -143,3 +143,19 @@ Sangoma repository: ::
        gpgcheck=0
        gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
+
+Source RPMs
+-----------
+
+Add this repository: ::
+
+ [sng-src]
+ name=SRPMs for Sanoma specific packages
+ baseurl=http://package1.sangoma.net/sangoma/src
+ gpgcheck=0
+ enabled=0
+
+Use yum downloader: ::
+
+ yumdownloader --source kmod-dahdi-linux-2.11.1-3.10.0_327.36.1.el7.24.sng7.x86_64 --enablerepo=sng-src
+
