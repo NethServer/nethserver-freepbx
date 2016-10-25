@@ -46,49 +46,65 @@ User from Active Directory
 
 You can import your active directory user into freepbx by following this official guide from freepbx:
 
-[Import users from Active Directory ](http://wiki.freepbx.org/display/FPG/How+to+Authenticate+User+Manager+via+Microsoft+Active+Directory)
+- http://wiki.freepbx.org/display/FPG/How+to+Authenticate+User+Manager+via+Microsoft+Active+Directory
 
 WebRTC
 ======
 
 You can create WebRTC extensions following this official guide from freepbx:
 
-[Setting up WebRTC on FreePBX](http://wiki.freepbx.org/display/FPG/WebRTC+Phone-UCP#WebRTCPhone-UCP-EnablingWebRTCPhoneforauser)
+- http://wiki.freepbx.org/display/FPG/WebRTC+Phone-UCP#WebRTCPhone-UCP-EnablingWebRTCPhoneforauser
 
 After the installation of Certificate Manager and WebRTC modules there is a valid self-signed certificate that can be used for WebRTC.
 
 How to test it
 --------------
 
-1. From "Advanced settings" page:
+1. Install "Certificate management" module
+
+2. From "Advanced settings" page:
 
    - Enable the mini-HTTP Server
-   - Set HTTP and HTTPS bind addresses to 0.0.0.0
+   - Set "SIP Channel Driver" to `chan_pjsip`
 
-2. Configure a user with a virtual extension
+3. From "SIP settings", inside the PJSIP tab, set the following values:
 
-3. Enable WebRTC
+   - Certificate Manager: default
+   - SSL Method: default
+   - Verify Client: No
+   - Verify Server: No
+   - udp: yes
+   - tcp: no
+   - tls: no
+   - ws: yes
+   - wss: yes
+   - Port listen: 5160
 
-4. Temporarly disable the firewall:
+4. Configure a new PJSIP extension and set the following values:
+
+   - Enable AVPF: yes
+   - Enable ICE Support: yes
+   - Media use received transport: no
+   - RTP symmetric: yes
+   - Media encryption: DTLS-SRTP
+   - Require RTP (media) encryption: yes
+   - Enable DTLS: yes
+   - Use certificate: default
+   - DTLS verify: no
+   - DLTS setup: Act/Pass
+   - DTLS Rekey Interval: 0
+
+
+5. Restart asterisk and temporarly disable the firewall:
 
    ::
   
+   systemctl restart asterisk
    shorewall clear
 
-Given a virtual extension 200, FreePBX will create a new extension 99200 for WebRTC.
-Open one of the following WebRTC client and use these settings:
+6. Open `https://<server_ip>:8089/ws` URL with the browser and accept the certificate
 
-- Name: <yourname>
-- SIP URI: sip:99200@<server_ip>
-- WS URI: wss://<server_ip>:8089/ws
-- Password: read from MySQL
-
-  ::
-
-  mysql asterisk -e "select data from sip where id='99200' and keyword = 'secret';"
-
-
-WebRTC clients:
+7. Try with one of the below WebRTC cients:
 
 - http://jssip.net/
 - https://www.doubango.org/sipml5/
@@ -97,7 +113,15 @@ Known bugs
 ----------
 
 - WebRTC under Chrome is not allowed in HTTP
-- WebRTC in UCP module on FreepBX doesn't work as expected. [Ref](http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
+- WebRTC in UCP module on FreepBX doesn't work as expected. (http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
+- WebRTC doesn't work on Firefox
+
+The server may raise the following error: ::
+
+ ERROR[23205][C-00000007]: res_rtp_asterisk.c:2172 __rtp_recvfrom: 
+ DTLS failure occurred on RTP instance '0x7fa9540f54d8' due to reason 'missing tmp ecdh key', terminating
+
+By the way, the bug should be already fixed, see: https://issues.asterisk.org/jira/browse/ASTERISK-25265
 
 Asterisk
 ========
