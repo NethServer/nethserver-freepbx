@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+use esmith::ConfigDB;
+use NethServer::SSSD;
+
+my $sssd = new NethServer::SSSD();
+my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
+my $domain = $db->get('DomainName')->prop('type');
+my %settings = ();
+
+$settings{'sync'} = '0 * * * *';
+
+if ($sssd->isLdap) {
+    $settings{'authOpenLDAPSettings'} = '{"host":"'. $sssd->host. '"' .
+        ',"port":"'. $sssd->port. '"' .
+        ',"tls":true' .
+        ',"username":"'. $sssd->bindUser. '"' .
+        ',"password":"'. $sssd->bindPassword. '"' .
+        ',"userdn":"'. $sssd->baseDN. '"' .
+        ',"basedn":"'. $sssd->baseDN. '"' .
+        ',"userident":"cn"' .
+        ',"la":""' .
+        ',"sync":null}';
+
+    $settings{'auth'} = 'Openldap';
+}
+elsif($sssd->isAD) {
+    $settings{'authMSADSettings'} = '{"host":"'. $sssd->host. '"' .
+        ',"port":"'. $sssd->port. '"' .
+        ',"username":"'. $sssd->bindUser(). '"' .
+        ',"password":"'. $sssd->bindPassword. '"' .
+        ',"domain":"'. $domain. '"' .
+        ',"dn":"'. $sssd->userDN. '"' .
+        ',"la":""' .
+        ',"sync":null}';
+
+    $settings{'auth'} = 'Msad';
+}
+
+if ($sssd->isLdap or $sssd->isAD) {
+    for my $key (keys %settings) {
+        $settings{$key} =~ s/"/\\\"/g;
+
+        print $key. ' ';
+
+        system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole kvstore userman --action set --key '. $key. ' --value \''. $settings{$key} . '\' "');
+    }
+
+    $ret = system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole userman sync" 2> /dev/null');
+
+    exit ($ret ne 0 ? 1 : 0);
+}
