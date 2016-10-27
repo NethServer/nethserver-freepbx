@@ -191,5 +191,7 @@ You can download all needed RPMs from upstream using rpm-harvester: ::
 
   git clone -b freepbx https://github.com/Stell0/rpm-harvester.git
   cd rpm-harvester
-  ./get_rpms.sh `cat asterisk | sed '/^#/d'`
+  wget https://raw.githubusercontent.com/NethServer/nethserver-freepbx/master/asterisk-rpms
+  ./get_rpms.sh `cat asterisk-rpms | sed '/^#/d'`
 
+All downloaded packages will be available inside the RPMs directory.
