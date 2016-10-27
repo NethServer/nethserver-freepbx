@@ -183,3 +183,13 @@ Use yum downloader: ::
 
  yumdownloader --source kmod-dahdi-linux-2.11.1-3.10.0_327.36.1.el7.24.sng7.x86_64 --enablerepo=sng-src
 
+
+Download all asterisk RPMs
+--------------------------
+
+You can download all needed RPMs from upstream using rpm-harvester: ::
+
+  git clone -b freepbx https://github.com/Stell0/rpm-harvester.git
+  cd rpm-harvester
+  ./get_rpms.sh `cat asterisk | sed '/^#/d'`
+
