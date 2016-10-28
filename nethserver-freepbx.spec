@@ -7,6 +7,10 @@ Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
 
 BuildRequires: nethserver-devtools
+BuildRequires: systemd
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 
 Requires: freepbx
 Requires: rh-php56, rh-php56-php-fpm
@@ -30,6 +34,15 @@ rm -rf %{buildroot}
 (cd root ; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
+
+%post
+%systemd_post httpd-admin.service asterisk.service
+
+%preun
+%systemd_preun httpd-admin.service asterisk.service
+
+%postun
+%systemd_postun
 
 
 %files -f %{name}-%{version}-%{release}-filelist
