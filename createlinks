@@ -15,6 +15,7 @@ use esmith::Build::CreateLinks qw(:all);
 #
 event_templates('nethserver-freepbx-update', qw(
    /etc/opt/rh/rh-php56/php-fpm.d/www.conf
+   /etc/httpd/conf.d/default-virtualhost.inc
 ));
 
 event_actions('nethserver-freepbx-update', qw(
