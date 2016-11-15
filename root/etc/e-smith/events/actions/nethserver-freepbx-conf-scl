@@ -13,7 +13,6 @@ cd /usr/src/freepbx
 ./install --dbuser root --dbpass $pass --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1
 
 /usr/bin/mysql --defaults-file=/root/.my.cnf -N --batch asterisk -e 'SELECT `data` FROM `module_xml` WHERE `id`="randomid"' > /etc/asterisk/freepbx-id
-/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e 'UPDATE freepbx_settings SET value = 0 WHERE keyword = "CHECKREFERER"'
 
 # refresh fpbx signatures of files and reload
 echo -e "[modules]\nautoload=yes" >> /etc/asterisk/asterisk.conf
