@@ -19,9 +19,9 @@ pm.start_servers = 5
 pm.min_spare_servers = 5
 pm.max_spare_servers = 35
 
-slowlog = /var/opt/rh/rh-php56/log/php-fpm/www-slow.log
+slowlog = /var/log/pbx/www-slow.log
 
-php_admin_value[error_log] = /var/opt/rh/rh-php56/log/php-fpm/www-error.log
+php_admin_value[error_log] = /var/log/pbx/www-error.log
 php_admin_flag[log_errors] = on
 
 php_value[session.save_handler] = files
