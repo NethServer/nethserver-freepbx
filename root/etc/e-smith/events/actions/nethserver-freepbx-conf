@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# check if fpbx is installed in a better way
-if [[ -d /var/www/html/freepbx ]] ; then
+# check if fpbx is already installed
+if [[ -f /var/www/html/freepbx/index.php ]] ; then
     exit 0
 fi
 
@@ -28,7 +28,7 @@ touch /var/log/asterisk/cdr-csv/Master.csv
 touch /etc/asterisk/pjsip_wizard.conf
 
 chmod 666 /var/log/asterisk/cdr-csv/Master.csv
-chmod 755 /var/spool/asterisk/monitor
+chmod 755 /var/spool/asterisk/monitor 2>/dev/null
 
 mkdir -p /var/log/pbx/install
 mkdir -p /var/log/pbx/upgrade
