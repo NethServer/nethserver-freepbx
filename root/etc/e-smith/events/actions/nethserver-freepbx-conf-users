@@ -19,6 +19,7 @@ if ($sssd->isLdap) {
         ',"userdn":"'. $sssd->baseDN. '"' .
         ',"basedn":"'. $sssd->baseDN. '"' .
         ',"userident":"cn"' .
+        ',"displayname":"gecos"' .
         ',"la":""' .
         ',"sync":null}';
 
