@@ -11,9 +11,9 @@ my %settings = ();
 $settings{'sync'} = '0 * * * *';
 
 if ($sssd->isLdap) {
-    $settings{'authOpenLDAPSettings'} = '{"host":"'. $sssd->host. '"' .
+    $settings{'authOpenLDAPSettings'} = '{"host":"'. $sssd->ldapURI. '"' .
         ',"port":"'. $sssd->port. '"' .
-        ',"tls":true' .
+        ',"tls": ' . ($sssd->startTls ? 'true' : 'false') .
         ',"username":"'. $sssd->bindUser. '"' .
         ',"password":"'. $sssd->bindPassword. '"' .
         ',"userdn":"'. $sssd->baseDN. '"' .
