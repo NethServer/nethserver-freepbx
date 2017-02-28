@@ -1,6 +1,7 @@
 [Unit]
 Description=Asterisk PBX and telephony daemon.
 After=network.target
+Wants=systemd-modules-load.service
 
 [Service]
 Type=simple
