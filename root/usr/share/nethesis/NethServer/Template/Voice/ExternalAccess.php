@@ -8,7 +8,12 @@ echo $view->panel()
             ->insert($view->radioButton('AllowExternalIAX', 'enabled'))
             ->insert($view->radioButton('AllowExternalIAX', 'disabled'))
       )
-     ->insert(
+      ->insert(
+         $view->fieldset()->setAttribute('template', $T('AllowExternalSIPS_label'))
+            ->insert($view->radioButton('AllowExternalSIPS', 'enabled'))
+            ->insert($view->radioButton('AllowExternalSIPS', 'disabled'))
+      )
+      ->insert(
          $view->fieldset()->setAttribute('template', $T('AllowExternalWebRTC_label'))
             ->insert($view->radioButton('AllowExternalWebRTC', 'enabled'))
             ->insert($view->radioButton('AllowExternalWebRTC', 'disabled'))

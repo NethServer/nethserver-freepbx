@@ -36,6 +36,7 @@ class ExternalAccess extends \Nethgui\Controller\AbstractController
         parent::initialize();
         $this->declareParameter('AllowExternalWebRTC', Validate::SERVICESTATUS, array('configuration', 'asterisk', 'AllowExternalWebRTC'));
         $this->declareParameter('AllowExternalIAX', Validate::SERVICESTATUS, array('configuration', 'asterisk', 'AllowExternalIAX'));
+        $this->declareParameter('AllowExternalSIPS', Validate::SERVICESTATUS, array('configuration', 'asterisk', 'AllowExternalSIPS'));
     }
 
     protected function onParametersSaved($changes)
