@@ -55,6 +55,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %attr(0700,root,root) %dir %{_localstatedir}/log/httpd-fpbx
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/access_log
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/error_log
+%config(noreplace) /etc/asterisk/acl.conf
 %config(noreplace) /etc/sysconfig/httpd-fpbx
 %config /etc/dahdi/system.conf
 
