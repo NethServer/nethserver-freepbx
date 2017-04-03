@@ -41,12 +41,15 @@ SIP and other ports, from command line
     signal-event firewall-adjust
 
 
-User from Active Directory
-==========================
+Users
+=====
 
-You can import your active directory user into freepbx by following this official guide from freepbx:
+User are synced with NethServer users. You can manually force Userman module sync with
 
-- http://wiki.freepbx.org/display/FPG/How+to+Authenticate+User+Manager+via+Microsoft+Active+Directory
+::
+
+    /usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole userman sync"
+
 
 WebRTC
 ======
