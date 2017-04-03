@@ -18,6 +18,7 @@ Requires: rh-php56-php-mysql, rh-php56-php-pear, rh-php56-php-pdo
 Requires: rh-php56-php-process, rh-php56-php-xml, rh-php56-php-mbstring
 Requires: rh-php56-php-intl, rh-php56-php-ldap, rh-php56-php-odbc, rh-php56-php-gd
 Requires: nethserver-mysql
+Requires: nethserver-unixODBC
 
 %description
 nethserver-freepbx is the FreePBX configuration package for NethServer

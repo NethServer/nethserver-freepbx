@@ -16,10 +16,12 @@ use esmith::Build::CreateLinks qw(:all);
 event_templates('nethserver-freepbx-update', qw(
    /etc/httpd/conf.d/default-virtualhost.inc
    /etc/asterisk/freepbx_chown.conf
+   /etc/odbc.ini
 ));
 
 event_actions('nethserver-freepbx-update', qw(
     initialize-default-databases        00
+    nethserver-unixODBC-conf            50
     nethserver-freepbx-conf             50
     nethserver-freepbx-conf-scl         55
     nethserver-freepbx-conf-users       60
