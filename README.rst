@@ -114,6 +114,14 @@ How to test it
 
 Known bugs
 ----------
+- Asterisk wrong gid / uid:
+
+ if asterisk user and group don't exist, they are created with wrong id.
+ Workaround: before installation launch::
+ 
+   groupadd -r asterisk
+   useradd  -r -s /sbin/nologin -d /var/lib/asterisk -M -c 'Asterisk User' -g asterisk asterisk
+ 
 
 - WebRTC under Chrome is not allowed in HTTP
 - WebRTC in UCP module on FreepBX doesn't work as expected. (http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
