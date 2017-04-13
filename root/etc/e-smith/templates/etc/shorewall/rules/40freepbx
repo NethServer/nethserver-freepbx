@@ -20,6 +20,11 @@
         $OUT .= "# Enable SIP Secure from red interfaces\n";
         $OUT .= "?COMMENT Enable SIPS from red interfaces\n";
         $OUT .= "ACCEPT\tnet\t\$FW\ttcp\t5061\n";
+    }
+    #open RTP ports if sip or webrtc are enabled
+    if ($sips eq 'enabled' or $webrtc eq 'enabled') {
+        $OUT .= "# Enable RTP from red interfaces\n";
+        $OUT .= "?COMMENT Enable RTP from red interfaces\n";
         $OUT .= "ACCEPT\tnet\t\$FW\tudp\t10000:20000\n";
     }
 
