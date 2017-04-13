@@ -14,6 +14,12 @@ Installation
 
 MariaDB, Asterisk 13 and FreePBX 14 will be installed and configured.
 
+FreePBX Web UI Access
+======================
+
+FreePBX is now reachable at https://IP_ADDRESS/freepbx from green interfaces. To add an IP address or a network from red allowed to access interface, configure it from NethServer Web UI under "PBX Access" page
+
+
 FreePBX Modules
 ===============
 
