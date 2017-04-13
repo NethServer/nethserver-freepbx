@@ -1,0 +1,8 @@
+<Location /freepbx>
+    Deny from all
+    Allow from {{$localAccess}} {{$validFrom}}
+    ProxyPass http://127.0.0.1:960/freepbx
+    ProxyPassReverse http://127.0.0.1:960/freepbx
+    ProxyPreserveHost On
+</Location>
+
