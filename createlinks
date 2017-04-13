@@ -15,6 +15,7 @@ use esmith::Build::CreateLinks qw(:all);
 #
 event_templates('nethserver-freepbx-update', qw(
    /etc/httpd/conf.d/default-virtualhost.inc
+   /etc/httpd/conf.d/freepbx.conf
    /etc/asterisk/freepbx_chown.conf
    /etc/odbc.ini
 ));
@@ -45,3 +46,21 @@ event_link("nethserver-freepbx-backup-restore", "post-restore-config", "80");
 
 #launch backup restore on package update/upgrade
 event_link("nethserver-freepbx-backup-restore", "nethserver-freepbx-update", "70");
+
+#
+# nethserver-freepbx-httpd-save
+#
+
+my $event = "nethserver-freepbx-httpd-save";
+
+templates2events("/etc/httpd/conf.d/freepbx.conf",$event);
+event_services($event, qw(
+    httpd reload
+));
+
+#update freepbx.conf when modifying green ip adresses
+my $event = "interface-update";
+templates2events("/etc/httpd/conf.d/freepbx.conf", "interface-update");
+event_services($event, qw(
+    httpd reload
+));
