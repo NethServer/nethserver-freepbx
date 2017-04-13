@@ -1,0 +1,8 @@
+<Location /ucp>
+    Deny from all
+    Allow from {{$localAccess}} {{$validFrom}}
+    ProxyPass http://127.0.0.1:960/freepbx/ucp
+    ProxyPassReverse http://127.0.0.1:960/freepbx/ucp
+    ProxyPreserveHost On
+</Location>
+

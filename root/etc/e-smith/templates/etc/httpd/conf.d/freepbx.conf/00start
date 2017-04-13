@@ -1,0 +1,13 @@
+{
+    use esmith::NetworksDB;
+
+    my $ndb = esmith::NetworksDB->open_ro();
+    my @localAccessSpec = $ndb->local_access_spec();
+    our $localAccess = join(' ',@localAccessSpec);
+
+    our $validFrom = ${'httpd-fpbx'}{'ValidFrom'};
+    $validFrom =~ s/,/ /;
+
+    $OUT = "";
+}
+
