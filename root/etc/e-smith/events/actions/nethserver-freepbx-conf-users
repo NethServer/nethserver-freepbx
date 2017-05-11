@@ -32,6 +32,8 @@ elsif($sssd->isAD) {
         ',"password":"'. $sssd->bindPassword. '"' .
         ',"domain":"'. $domain. '"' .
         ',"dn":"'. $sssd->userDN. '"' .
+        ',"use_tls":true' .
+        ',"account_suffix":"@'. $db->get('sssd')->prop('Realm'). '"' .
         ',"la":""' .
         ',"sync":null}';
 
