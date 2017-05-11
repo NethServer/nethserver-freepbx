@@ -49,9 +49,12 @@ if ($sssd->isLdap or $sssd->isAD) {
         system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole kvstore userman --action set --key '. $key. ' --value \''. $settings{$key} . '\' "');
     }
 
-    $ret = system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole userman sync" 2> /dev/null');
+    system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole userman sync" 2> /dev/null');
 
+    # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
+    $ret = $? >> 8;
+    if ( $ret == 1) {
+        $ret = 0;
+    }
+    exit($ret);
 }
-
-# HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
-exit(0);
