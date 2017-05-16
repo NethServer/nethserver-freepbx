@@ -1,55 +1,61 @@
 #!/usr/bin/perl
 
+use JSON;
 use esmith::ConfigDB;
 use NethServer::SSSD;
 
 my $sssd = new NethServer::SSSD();
 my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
-my $domain = $db->get('DomainName')->prop('type');
+my $domain = $db->get_value('DomainName','type');
 my %settings = ();
 
 $settings{'sync'} = '0 * * * *';
 
 if ($sssd->isLdap) {
-    $settings{'authOpenLDAPSettings'} = '{"host":"'. $sssd->ldapURI. '"' .
-        ',"port":"'. $sssd->port. '"' .
-        ',"tls": ' . ($sssd->startTls ? 'true' : 'false') .
-        ',"username":"'. $sssd->bindUser. '"' .
-        ',"password":"'. $sssd->bindPassword. '"' .
-        ',"userdn":"'. $sssd->baseDN. '"' .
-        ',"basedn":"'. $sssd->baseDN. '"' .
-        ',"userident":"cn"' .
-        ',"displayname":"gecos"' .
-        ',"la":""' .
-        ',"sync":null}';
+    $settings{'authOpenLDAPSettings'} = encode_json ({
+        host => $sssd->ldapURI,
+        port => $sssd->port,
+        tls => ($sssd->startTls ? JSON::true : JSON::false),
+        username => $sssd->bindUser,
+        password => $sssd->bindPassword,
+        userdn => $sssd->baseDN,
+        basedn => $sssd->baseDN,
+        userident => "cn",
+        displayname => "gecos",
+        la => "",
+        sync => JSON::null
+    });
 
     $settings{'auth'} = 'Openldap';
-}
-elsif($sssd->isAD) {
-    $settings{'authMSADSettings'} = '{"host":"'. $sssd->host. '"' .
-        ',"port":"'. $sssd->port. '"' .
-        ',"username":"'. $sssd->bindUser(). '"' .
-        ',"password":"'. $sssd->bindPassword. '"' .
-        ',"domain":"'. $domain. '"' .
-        ',"dn":"'. $sssd->userDN. '"' .
-        ',"la":""' .
-        ',"sync":null}';
-
+} elsif($sssd->isAD) {
+    $settings{'authMSADSettings'} = encode_json ({
+        host => $sssd->host,
+        port => $sssd->port,
+        username => $sssd->bindUser,
+        password => $sssd->bindPassword,
+        domain => $domain,
+        dn => $sssd->userDN,
+        use_tls => JSON::true,
+        account_suffix => '@' . $db->get_prop('sssd', 'Realm'),
+        la => "",
+        sync => JSON::null
+    });
     $settings{'auth'} = 'Msad';
 }
 
 if ($sssd->isLdap or $sssd->isAD) {
     for my $key (keys %settings) {
         $settings{$key} =~ s/"/\\\"/g;
-
-        print $key. ' ';
-
-        system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole kvstore userman --action set --key '. $key. ' --value \''. $settings{$key} . '\' "');
+        print $key.' ';
+        system(qw(/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole kvstore userman --action set --key), $key, '--value', $settings{$key}); 
     }
 
-    $ret = system('/usr/bin/scl enable rh-php56 "/usr/sbin/fwconsole userman sync" 2> /dev/null');
+    system('/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman sync');
 
+    # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
+    $ret = $? >> 8;
+    if ( $ret == 1) {
+        $ret = 0;
+    }
+    exit($ret);
 }
-
-# HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
-exit(0);
