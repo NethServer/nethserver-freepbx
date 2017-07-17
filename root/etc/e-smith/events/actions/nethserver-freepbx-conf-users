@@ -12,6 +12,8 @@ my $domain = $db->get('DomainName')->prop('type');
 my %settings = ();
 
 if ($sssd->isLdap) {
+    my $userdn = $sssd->bindDN;
+    $userdn =~ s/$sssd->bindUser,//ig;
     $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
@@ -19,13 +21,13 @@ if ($sssd->isLdap) {
         basedn => $sssd->baseDN,
         username => $sssd->bindUser,
         password => $sssd->bindPassword,
-        userident => 'uid',
+        userident => 'cn',
         displayname => 'gecos',
-        userdn => $sssd->userDN,
+        userdn => $userdn,
         la => '',
         sync => '0 * * * *'
     });
-    $settings{'driver'} = 'Openldap2';
+    $settings{'driver'} = 'Openldap';
     $settings{'name'} = 'NethServer LDAP';
 } elsif($sssd->isAD) {
     $settings{'auth-settings'} = encode_json ({
