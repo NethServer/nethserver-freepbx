@@ -3,54 +3,102 @@
 use JSON;
 use esmith::ConfigDB;
 use NethServer::SSSD;
+use DBI;
+use NethServer::Password;
 
 my $sssd = new NethServer::SSSD();
 my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
-my $domain = $db->get_value('DomainName','type');
+my $domain = $db->get('DomainName')->prop('type');
 my %settings = ();
 
-$settings{'sync'} = '0 * * * *';
-
 if ($sssd->isLdap) {
-    $settings{'authOpenLDAPSettings'} = encode_json ({
-        host => $sssd->ldapURI,
-        port => $sssd->port,
-        tls => ($sssd->startTls ? JSON::true : JSON::false),
-        username => $sssd->bindUser,
-        password => $sssd->bindPassword,
-        userdn => $sssd->baseDN,
-        basedn => $sssd->baseDN,
-        userident => "cn",
-        displayname => "gecos",
-        la => "",
-        sync => JSON::null
-    });
-
-    $settings{'auth'} = 'Openldap';
-} elsif($sssd->isAD) {
-    $settings{'authMSADSettings'} = encode_json ({
+    my $userdn = $sssd->bindDN;
+    $userdn =~ s/$sssd->bindUser,//ig;
+    $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
+        tls => ($sssd->startTls ? JSON::true : JSON::false),
+        basedn => $sssd->baseDN,
         username => $sssd->bindUser,
         password => $sssd->bindPassword,
-        domain => $domain,
-        dn => $sssd->userDN,
-        use_tls => JSON::true,
-        account_suffix => '@' . $db->get_prop('sssd', 'Realm'),
-        la => "",
-        sync => JSON::null
+        userident => 'cn',
+        displayname => 'gecos',
+        userdn => $userdn,
+        la => '',
+        sync => '0 * * * *'
     });
-    $settings{'auth'} = 'Msad';
+    $settings{'driver'} = 'Openldap';
+    $settings{'name'} = 'NethServer LDAP';
+} elsif($sssd->isAD) {
+    $settings{'auth-settings'} = encode_json ({
+        host => $sssd->host,
+        port => $sssd->port,
+        dn => $sssd->userDN,
+        username => $sssd->bindUser,
+        password => $sssd->bindPassword,
+        domain => $db->get('sssd')->prop('Realm'),
+        connection => 'tls',
+        localgroups => '0',
+        createextensions => '',
+        externalidattr => 'objectGUID',
+        descriptionattr => 'description',
+        commonnameattr => 'cn',
+        userdn => '',
+        userobjectclass => 'user',
+        userobjectfilter => '(&(objectClass=user)(objectCategory=person))',
+        usernameattr => 'sAMAccountName',
+        userfirstnameattr => 'givenName',
+        userlastnameattr => 'sn',
+        userdisplaynameattr => 'displayName',
+        usertitleattr => 'personaltitle',
+        usercompanyattr => 'company',
+        usercellphoneattr => 'mobile',
+        userworkphoneattr => 'telephoneNumber',
+        userhomephoneattr => 'homephone',
+        userfaxphoneattr => 'facsimileTelephoneNumber',
+        usermailattr => 'mail',
+        usergroupmemberattr => 'memberOf',
+        la => 'ipphone',
+        groupdnaddition => '',
+        groupobjectclass => 'group',
+        groupobjectfilter => '(objectCategory=Group)',
+        groupmemberattr => 'member',
+        sync => '0 * * * *'
+    });
+    $settings{'driver'} = 'Msad2';
+    $settings{'name'} = 'NethServer AD';
 }
 
 if ($sssd->isLdap or $sssd->isAD) {
-    for my $key (keys %settings) {
-        $settings{$key} =~ s/"/\\\"/g;
-        print $key.' ';
-        system(qw(/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole kvstore userman --action set --key), $key, '--value', $settings{$key}); 
-    }
+    # Connect to asterisk mysql
+    my $mysqlpwd = NethServer::Password::store('mysql');
+    my $dbh = DBI->connect("DBI:mysql:database=asterisk;host=localhost","root",$mysqlpwd,{'RaiseError' => 1});
 
-    system('/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman sync');
+    # Check if there is a NethServer AD or LDAP already configured and gets its id
+    my $id;
+    my $sth = $dbh->prepare("SELECT id FROM `userman_directories` WHERE `name` = 'NethServer LDAP' OR `name` = 'NethServer AD'");
+    $sth->execute();
+    if (my $ref = $sth->fetchrow_hashref()) {
+        $id = $ref->{'id'};
+        # Update configuration
+        $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id.""); 
+        $sth->finish();
+    } else {
+        # Set defautl to 0 for other userman_directories
+        $dbh->do("UPDATE IGNORE `userman_directories` SET `default` = 0");
+        # Create entry for NethServer AD/LDAP in userman_directories
+        $dbh->do("INSERT INTO `userman_directories` (`name`, `driver`, `active`, `order`, `default`, `locked`) VALUES ('" . $settings{'name'} . "','" . $settings{'driver'} . "',1,5,1,1)");
+        $sth->finish();
+        $sth->execute();
+        $ref = $sth->fetchrow_hashref();
+        $id = $ref->{'id'};
+        $sth->finish();
+        # Create configuration
+        $dbh->do("INSERT INTO kvstore_FreePBX_modules_Userman (`key`, `val`, `type`, `id`) VALUES ('auth-settings','" . $settings{'auth-settings'} . "','json-arr',".$id.")");
+    }
+    $dbh->disconnect();
+
+    system("/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --sync $id --force");
 
     # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
     $ret = $? >> 8;
@@ -59,3 +107,4 @@ if ($sssd->isLdap or $sssd->isAD) {
     }
     exit($ret);
 }
+
