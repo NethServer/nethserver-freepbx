@@ -82,8 +82,10 @@ if ($sssd->isLdap or $sssd->isAD) {
         $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id.""); 
         $sth->finish();
     } else {
-        # Create entry for NethServer AD in userman_directories
-        $dbh->do("INSERT INTO `userman_directories` (`name`, `driver`, `active`, `order`, `default`, `locked`) VALUES ('" . $settings{'name'} . "','" . $settings{'driver'} . "',1,5,0,1)");
+        # Set defautl to 0 for other userman_directories
+        $dbh->do("UPDATE IGNORE `userman_directories` SET `default` = 0");
+        # Create entry for NethServer AD/LDAP in userman_directories
+        $dbh->do("INSERT INTO `userman_directories` (`name`, `driver`, `active`, `order`, `default`, `locked`) VALUES ('" . $settings{'name'} . "','" . $settings{'driver'} . "',1,5,1,1)");
         $sth->finish();
         $sth->execute();
         $ref = $sth->fetchrow_hashref();
@@ -92,7 +94,6 @@ if ($sssd->isLdap or $sssd->isAD) {
         # Create configuration
         $dbh->do("INSERT INTO kvstore_FreePBX_modules_Userman (`key`, `val`, `type`, `id`) VALUES ('auth-settings','" . $settings{'auth-settings'} . "','json-arr',".$id.")");
     }
-
     $dbh->disconnect();
 
     system("/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --sync $id --force");
