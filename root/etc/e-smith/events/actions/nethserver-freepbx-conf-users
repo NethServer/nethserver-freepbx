@@ -76,12 +76,14 @@ if ($sssd->isLdap or $sssd->isAD) {
 
     # Check if there is a NethServer AD or LDAP already configured and gets its id
     my $id;
-    my $sth = $dbh->prepare("SELECT id FROM `userman_directories` WHERE `name` = 'NethServer LDAP' OR `name` = 'NethServer AD'");
+    my $sth = $dbh->prepare("SELECT id,name FROM `userman_directories` WHERE `name` LIKE 'NethServer LDAP%' OR `name` LIKE 'NethServer AD%'");
     $sth->execute();
     if (my $ref = $sth->fetchrow_hashref()) {
         $id = $ref->{'id'};
-        # Update configuration
-        $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id.""); 
+        if (($ref->{'name'} eq 'NethServer LDAP') or ($ref->{'name'} eq 'NethServer AD')) {
+            # Update configuration
+            $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id."");
+        }
         $sth->finish();
     } else {
         # Set defautl to 0 for other userman_directories
