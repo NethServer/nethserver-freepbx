@@ -212,3 +212,13 @@ You can download all needed RPMs from upstream using rpm-harvester: ::
   ./get_rpms.sh `cat asterisk-rpms | sed '/^#/d'`
 
 All downloaded packages will be available inside the RPMs directory.
+
+Custom User Management configuration
+------------------------------------
+
+nethserver-freepbx-conf-users action configure users using NethServer SSSD configuration. This creates an entry in userman FreePBX module called NethServer [AD|LDAP].
+If you need to edit this entry and you don't want it to be modified when nethserver-freepbx-conf-users is launched again, change it's name adding "Custom" (or any other string) at the end. Example: 'NethServer AD' -> 'NethServer AD Custom'
+
+If you remove NethServer [AD|LDAP] string, another entry will be created by nethserver-freepbx-conf-users action.
+
+To check user synchronization, use this command: `/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --syncall --force --verbose`
