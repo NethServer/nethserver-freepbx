@@ -88,7 +88,7 @@ if ($sssd->isLdap or $sssd->isAD) {
         # Set defautl to 0 for other userman_directories
         $dbh->do("UPDATE IGNORE `userman_directories` SET `default` = 0");
         # Create entry for NethServer AD/LDAP in userman_directories
-        $dbh->do("INSERT INTO `userman_directories` (`name`, `driver`, `active`, `order`, `default`, `locked`) VALUES ('" . $settings{'name'} . "','" . $settings{'driver'} . "',1,5,1,1)");
+        $dbh->do("INSERT INTO `userman_directories` (`name`, `driver`, `active`, `order`, `default`, `locked`) VALUES ('" . $settings{'name'} . "','" . $settings{'driver'} . "',1,5,1,0)");
         $sth->finish();
         $sth->execute();
         $ref = $sth->fetchrow_hashref();
