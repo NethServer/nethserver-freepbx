@@ -13,7 +13,6 @@ my %settings = ();
 
 if ($sssd->isLdap) {
     my $userdn = $sssd->bindDN;
-    $userdn =~ s/$sssd->bindUser,//ig;
     $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
@@ -23,7 +22,7 @@ if ($sssd->isLdap) {
         password => $sssd->bindPassword,
         userident => 'cn',
         displayname => 'gecos',
-        userdn => $userdn,
+        userdn => $sssd->baseDN,
         la => '',
         sync => '0 * * * *'
     });
