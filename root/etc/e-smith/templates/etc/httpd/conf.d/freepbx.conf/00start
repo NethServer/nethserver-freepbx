@@ -6,7 +6,7 @@
     our $localAccess = join(' ',@localAccessSpec);
 
     our $validFrom = ${'httpd-fpbx'}{'ValidFrom'};
-    $validFrom =~ s/,/ /;
+    $validFrom =~ s/,/ /g;
 
     $OUT = "";
 }
