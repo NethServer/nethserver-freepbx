@@ -10,13 +10,20 @@ my $sssd = new NethServer::SSSD();
 my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
 my $domain = $db->get('DomainName')->prop('type');
 my %settings = ();
+my $secutiry;
+if ($sssd->port == 636) {
+    $secutiry = 'ssl';
+} elsif ($sssd->startTls) {
+    $secutiry = 'tls';
+}
 
 if ($sssd->isLdap) {
     my $userdn = $sssd->bindDN;
     $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
-        tls => ($sssd->startTls ? JSON::true : JSON::false),
+        tls => ($secutiry = 'tls' ? JSON::true : JSON::false),
+        ssl => ($secutiry = 'ssl' ? JSON::true : JSON::false),
         basedn => $sssd->baseDN,
         username => $sssd->bindUser,
         password => $sssd->bindPassword,
@@ -36,7 +43,7 @@ if ($sssd->isLdap) {
         username => $sssd->bindUser,
         password => $sssd->bindPassword,
         domain => $db->get('sssd')->prop('Realm'),
-        connection => 'tls',
+        connection => $secutiry,
         localgroups => '0',
         createextensions => '',
         externalidattr => 'objectGUID',
