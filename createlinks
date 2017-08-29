@@ -26,6 +26,7 @@ event_actions('nethserver-freepbx-update', qw(
     nethserver-freepbx-conf             50
     nethserver-freepbx-conf-scl         55
     nethserver-freepbx-conf-users       60
+    nethserver-freepbx-set-cron-scl     60
 ));
 
 event_services('nethserver-freepbx-update', qw(
