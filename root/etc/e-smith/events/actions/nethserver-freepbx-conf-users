@@ -64,7 +64,7 @@ if ($sssd->isLdap) {
         userfaxphoneattr => 'facsimileTelephoneNumber',
         usermailattr => 'mail',
         usergroupmemberattr => 'memberOf',
-        la => 'ipphone',
+        la => '',
         groupdnaddition => '',
         groupobjectclass => 'group',
         groupobjectfilter => '(objectCategory=Group)',
