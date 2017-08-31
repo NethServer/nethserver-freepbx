@@ -1,0 +1,54 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2017 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+#
+# Add SCL environment in /var/spool/cron/asterisk if it isn't already set
+#
+
+# Open asterisk cron file if exists
+open my $handle, '<', '/var/spool/cron/asterisk';
+chomp(my @lines = <$handle>);
+close $handle;
+
+# Check if SCL path is already configured
+my $path = 'PATH=/opt/rh/rh-php56/root/usr/bin:/opt/rh/rh-php56/root/usr/sbin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin';
+my $library_path = 'LD_LIBRARY_PATH=/opt/rh/rh-php56/root/usr/lib64';
+if ($lines[0] ne $path or $lines[1] ne $library_path) {
+
+    $OUT .= $path."\n";
+    $OUT .= $library_path."\n\n";
+    
+    foreach my $line (@lines) {
+        $OUT .= $line."\n";
+    }
+
+    # Write asterisk cron file
+    open FILE, ">/var/spool/cron/asterisk" or die 'Can\'t open output file';
+    print FILE $OUT;
+    close FILE;
+
+    # Set asterisk as owner and 600 as permissions
+    system ("/bin/chown asterisk:asterisk /var/spool/cron/asterisk");
+    system ("/bin/chmod 600 /var/spool/cron/asterisk");
+}
+
+
