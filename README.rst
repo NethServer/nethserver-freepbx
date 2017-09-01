@@ -3,15 +3,6 @@ nethserver-freepbx
 ==================
 
 This package configures FreePBX and Asterisk for NethServer
-
-Installation
-============
-
-::
-
-    yum --enablerepo=nethserver-testing clean all
-    yum --enablerepo=nethserver-testing install nethserver-freepbx
-
 MariaDB, Asterisk 13 and FreePBX 14 will be installed and configured.
 
 FreePBX Web UI Access
@@ -20,19 +11,13 @@ FreePBX Web UI Access
 FreePBX is now reachable at https://IP_ADDRESS/freepbx from green interfaces. To add an IP address or a network from red allowed to access interface, configure it from NethServer Web UI under "PBX Access" page
 
 
-FreePBX Modules
-===============
-
-Since there are still a few modules on freepbx mirrors for 14, to see the full list of all available modules you need to change FreePBX version to 13. This could have negative consequences, but allows you to install old modules that are probably compatible.
-
-::
-
-    mysql asterisk -e "UPDATE admin SET value = '13.0.999' WHERE variable = 'version'"
-
 Backup
 ======
 
-FreePBX configuration is stored in mysql, nethserver-backup-data is neeeded to backup it.
+Since FreePBX configuration is stored in MariaDB, database dump are split inside data and configuration backip:
+
+* configuration backup: contains the ``asterisk`` db with all configurations (extensions, trunks, etc.)
+* data backup: contanins the ``asteriskcdrdb`` db containg all PBX events
 
 Open services from external networks
 ====================================
@@ -120,105 +105,22 @@ How to test it
 
 Known bugs
 ----------
-- Asterisk wrong gid / uid:
-
- if asterisk user and group don't exist, they are created with wrong id.
- Workaround: before installation launch::
- 
-   groupadd -r asterisk
-   useradd  -r -s /sbin/nologin -d /var/lib/asterisk -M -c 'Asterisk User' -g asterisk asterisk
- 
 
 - WebRTC under Chrome is not allowed in HTTP
-- WebRTC in UCP module on FreepBX doesn't work as expected. (http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
-- WebRTC doesn't work on Firefox
-
-The server may raise the following error: ::
-
- ERROR[23205][C-00000007]: res_rtp_asterisk.c:2172 __rtp_recvfrom: 
- DTLS failure occurred on RTP instance '0x7fa9540f54d8' due to reason 'missing tmp ecdh key', terminating
-
-By the way, the bug should be already fixed, see: https://issues.asterisk.org/jira/browse/ASTERISK-25265
-
-Asterisk
-========
-
-Asterisk 13 is installed from Sangoma FreePBX distro RPMs.
-
-Sangoma repository: ::
-
-       # This is the standard Sangoma Yum Repository
-
-       [sng-base]
-       name=Sangoma-$releasever - Base
-       mirrorlist=http://mirrorlist.pbx.ws/?release=$releasever&arch=$basearch&repo=os&dist=$dist
-       #baseurl=http:/package1.sangoma.net/sng7/$releasever/os/$basearch/
-       gpgcheck=0
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Sangoma-7
-
-       [sng-updates]
-       name=Sangoma-$releasever - Updates
-       mirrorlist=http://mirrorlist.pbx.ws/?release=$releasever&arch=$basearch&repo=updates&dist=$dist
-       #baseurl=http://package1.sangoma.net/sng7/$releasever/updates/$basearch/
-       gpgcheck=0
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Sangoma-7
-
-       [sng-extras]
-       name=Sangoma-$releasever - Extras
-       mirrorlist=http://mirrorlist.pbx.ws/?release=$releasever&arch=$basearch&repo=extras&dist=$dist
-       #baseurl=http://package1.sangoma.net/sng7/$releasever/extras/$basearch/
-       gpgcheck=0
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Sangoma-7
-
-       [sng-pkgs]
-       name=Sangoma-$releasever - Sangoma Open Source Packages
-       mirrorlist=http://mirrorlist.pbx.ws/?release=$releasever&arch=$basearch&repo=sng7&dist=$dist
-       #baseurl=http://package1.sangoma.net/sng7/$releasever/sng7/$basearch/
-       gpgcheck=0
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Sangoma-7
-
-       [sng-epel]
-       name=Sangoma-$releasever - Sangoma Epel mirror
-       mirrorlist=http://mirrorlist.pbx.ws/?release=$releasever&arch=$basearch&repo=epel&dist=$dist
-       #baseurl=http://package1.sangoma.net/sng7/$releasever/epel/$basearch/
-       gpgcheck=0
-       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-
-
-Source RPMs
------------
-
-Add this repository: ::
-
- [sng-src]
- name=SRPMs for Sanoma specific packages
- baseurl=http://package1.sangoma.net/sangoma/src
- gpgcheck=0
- enabled=0
-
-Use yum downloader: ::
-
- yumdownloader --source kmod-dahdi-linux-2.11.1-3.10.0_327.36.1.el7.24.sng7.x86_64 --enablerepo=sng-src
-
-
-Download all asterisk RPMs
---------------------------
-
-You can download all needed RPMs from upstream using rpm-harvester: ::
-
-  git clone -b freepbx https://github.com/Stell0/rpm-harvester.git
-  cd rpm-harvester
-  wget https://raw.githubusercontent.com/NethServer/nethserver-freepbx/master/asterisk-rpms
-  ./get_rpms.sh `cat asterisk-rpms | sed '/^#/d'`
-
-All downloaded packages will be available inside the RPMs directory.
+- WebRTC in UCP module on FreepBX may not work as expected. (http://community.freepbx.org/t/webrtc-phone-with-https/26698/9)
+- WebRTC may not work on Firefox
 
 Custom User Management configuration
 ------------------------------------
 
-nethserver-freepbx-conf-users action configure users using NethServer SSSD configuration. This creates an entry in userman FreePBX module called NethServer [AD|LDAP].
-If you need to edit this entry and you don't want it to be modified when nethserver-freepbx-conf-users is launched again, change it's name adding "Custom" (or any other string) at the end. Example: 'NethServer AD' -> 'NethServer AD Custom'
+The ``nethserver-freepbx-conf-users action`` configures users using NethServer SSSD configuration. 
+This creates an entry in userman FreePBX module called ``NethServer [AD|LDAP]``.
 
-If you remove NethServer [AD|LDAP] string, another entry will be created by nethserver-freepbx-conf-users action.
+If you need to edit this entry and you don't want it to be modified when nethserver-freepbx-conf-users is launched again, 
+change it's name adding "Custom" (or any other string) at the end. Example: 'NethServer AD' -> 'NethServer AD Custom'
 
-To check user synchronization, use this command: `/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --syncall --force --verbose`
+If you remove ``NethServer [AD|LDAP]`` string, another entry will be created by ``nethserver-freepbx-conf-users`` action.
+
+To check user synchronization, use this command: ::
+
+ /usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --syncall --force --verbose
