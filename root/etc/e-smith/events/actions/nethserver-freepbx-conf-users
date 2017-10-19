@@ -37,6 +37,10 @@ if ($sssd->port == 636) {
     $security = 'tls';
 }
 
+$passwordUnicode = $sssd->bindPassword;
+$password = `/usr/bin/php -r "echo json_encode('$passwordUnicode');"`;
+$password =~ s/^"|"$//g;
+
 if ($sssd->isLdap) {
     my $userdn = $sssd->bindDN;
     $settings{'auth-settings'} = encode_json ({
@@ -46,7 +50,7 @@ if ($sssd->isLdap) {
         ssl => ($security = 'ssl' ? JSON::true : JSON::false),
         basedn => $sssd->baseDN,
         username => $sssd->bindUser,
-        password => $sssd->bindPassword,
+        password => $password,
         userident => 'cn',
         displayname => 'gecos',
         userdn => $sssd->baseDN,
@@ -61,7 +65,7 @@ if ($sssd->isLdap) {
         port => $sssd->port,
         dn => $sssd->userDN,
         username => $sssd->bindUser,
-        password => $sssd->bindPassword,
+        password => $password,
         domain => $db->get('sssd')->prop('Realm'),
         connection => $security,
         localgroups => '0',
