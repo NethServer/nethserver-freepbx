@@ -37,7 +37,7 @@ mkdir -p /var/lib/asterisk/sounds/custom/
 # wait for asterisk
 systemctl start asterisk
 for i in $(seq 0 300); do
-    /usr/sbin/asterisk -rx "core show version" 2>1 > /dev/null
+    /usr/sbin/asterisk -rx "core show version" &>> /dev/null
     if [[ $(echo $?) == 0 ]] ; then
         break
     fi
@@ -63,5 +63,9 @@ chmod -R 755 /etc/asterisk
 chmod 750 /etc/asterisk/keys
 
 sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/opt/rh/rh-php56/php.ini
+
+#Use bash shell for asterisk user
+echo "Making sure asterisk user has bash as shell" >> /var/log/freepbx_rpm_install.log
+/usr/sbin/usermod --shell /bin/bash asterisk &>> /var/log/freepbx_rpm_install.log
 
 exit 0
