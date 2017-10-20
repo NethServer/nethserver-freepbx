@@ -99,11 +99,11 @@ if ($sssd->isLdap) {
     $settings{'name'} = 'NethServer AD';
 }
 
-if ($sssd->isLdap or $sssd->isAD) {
-    # Connect to asterisk mysql
-    my $mysqlpwd = NethServer::Password::store('mysql');
-    my $dbh = DBI->connect("DBI:mysql:database=asterisk;host=localhost","root",$mysqlpwd,{'RaiseError' => 1});
+# Connect to asterisk mysql
+my $mysqlpwd = NethServer::Password::store('mysql');
+my $dbh = DBI->connect("DBI:mysql:database=asterisk;host=localhost","root",$mysqlpwd,{'RaiseError' => 1});
 
+if ($sssd->isLdap or $sssd->isAD) {
     # Check if there is a NethServer AD or LDAP already configured and gets its id
     my $id;
     my $sth = $dbh->prepare("SELECT id,name FROM `userman_directories` WHERE `name` LIKE 'NethServer LDAP%' OR `name` LIKE 'NethServer AD%'");
@@ -133,11 +133,18 @@ if ($sssd->isLdap or $sssd->isAD) {
 
     system("/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --sync $id --force");
 
-    # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
-    $ret = $? >> 8;
-    if ( $ret == 1) {
-        $ret = 0;
-    }
-    exit($ret);
+} else {
+    # Remove Account Provider configuration
+    my $sth = $dbh->prepare("DELETE FROM `userman_directories` WHERE `name` LIKE 'NethServer LDAP%' OR `name` LIKE 'NethServer AD%'");
+    $sth->execute();
+
+    system("/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --syncall --force --verbose");
 }
+
+# HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
+$ret = $? >> 8;
+if ( $ret == 1) {
+    $ret = 0;
+}
+exit($ret);
 
