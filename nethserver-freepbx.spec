@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.0
+Version: 14.0.1
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -61,6 +61,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri Oct 20 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.1-1
+- FreePBX user syncing fails on 7.4 with AD user provider - Bug NethServer/dev#5361
+
 * Thu Aug 31 2017 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.0-1
 - nethserver-freepbx first release
 
