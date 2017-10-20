@@ -113,6 +113,7 @@ if ($sssd->isLdap or $sssd->isAD) {
         if (($ref->{'name'} eq 'NethServer LDAP') or ($ref->{'name'} eq 'NethServer AD')) {
             # Update configuration
             $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id."");
+            $dbh->do("UPDATE IGNORE `userman_directories` SET `name`='" . $settings{'name'} . "',`driver`='" . $settings{'driver'} . "', `active`=1, `order`=5, `default`=1, `locked`=0 WHERE `name`='" . $ref->{'name'} . "'");
         }
         $sth->finish();
     } else {
