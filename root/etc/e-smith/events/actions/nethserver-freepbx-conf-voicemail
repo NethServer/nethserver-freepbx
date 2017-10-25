@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2017 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Create voicemessages table in asteriskcdrdb
+mysql_password=$(perl -mNethServer::Password -e "print NethServer::Password::store('mysql')")
+mysql -uroot -p$mysql_password asteriskcdrdb <<EOF
+CREATE TABLE IF NOT EXISTS \`voicemessages\` (
+  \`id\` int(11) NOT NULL AUTO_INCREMENT,
+  \`msgnum\` int(11) NOT NULL DEFAULT '0',
+  \`dir\` varchar(80) DEFAULT '',
+  \`context\` varchar(80) DEFAULT '',
+  \`macrocontext\` varchar(80) DEFAULT '',
+  \`callerid\` varchar(40) DEFAULT '',
+  \`origtime\` varchar(40) DEFAULT '',
+  \`duration\` varchar(20) DEFAULT '',
+  \`mailboxuser\` varchar(80) DEFAULT '',
+  \`mailboxcontext\` varchar(80) DEFAULT '',
+  \`recording\` longblob,
+  \`flag\` varchar(128) DEFAULT '',
+  \`read\` tinyint(1) DEFAULT '0',
+  \`msg_id\` varchar(40) DEFAULT '',
+  PRIMARY KEY (\`id\`),
+  KEY \`dir\` (\`dir\`)
+) DEFAULT CHARSET=utf8;
+EOF
+
+# Load app_voicemail_odbcstorage asterisk module
+sed -i '/^noload = app_voicemail_odbcstorage.so$/d' /etc/asterisk/modules.conf
+
+# Enable odbc storage in voicemail.conf
+grep -q 'odbcstorage\|odbctable' /etc/asterisk/voicemail.conf
+if [[ $? == 1 ]] ; then
+    #file exists and doesn't have voicemail odbc storage configured
+    sed -i "/\[general\]/a odbcstorage=asteriskcdrdb\nodbctable=voicemessages" /etc/asterisk/voicemail.conf
+fi
+
+asterisk -rx 'core restart when convenient'
