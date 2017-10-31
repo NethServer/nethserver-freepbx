@@ -42,22 +42,43 @@ $password = `/usr/bin/php -r "echo json_encode('$passwordUnicode');"`;
 $password =~ s/^"|"$//g;
 
 if ($sssd->isLdap) {
-    my $userdn = $sssd->bindDN;
     $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
-        tls => ($security = 'tls' ? JSON::true : JSON::false),
-        ssl => ($security = 'ssl' ? JSON::true : JSON::false),
         basedn => $sssd->baseDN,
-        username => $sssd->bindUser,
+        username => $sssd->bindDN,
         password => $password,
-        userident => 'cn',
         displayname => 'gecos',
-        userdn => $sssd->baseDN,
+        userdn => 'ou=People',
+        connection => $security,
+        localgroups => '0',
+        createextensions => '',
+        externalidattr => 'entryUUID',
+        descriptionattr => 'description',
+        commonnameattr => 'uid',
+        userobjectclass => 'posixAccount',
+        userobjectfilter => '(objectclass=posixAccount)',
+        usernameattr => 'uid',
+        userfirstnameattr => 'givenName',
+        userlastnameattr => 'sn',
+        userdisplaynameattr => 'gecos',
+        usertitleattr => '',
+        usercompanyattr => '',
+        usercellphoneattr => '',
+        userworkphoneattr => 'telephoneNumber',
+        userhomephoneattr => 'homephone',
+        userfaxphoneattr => 'facsimileTelephoneNumber',
+        usermailattr => 'mail',
+        usergroupmemberattr => 'memberOf',
         la => '',
+        groupnameattr => 'cn',
+        groupdnaddition => 'ou=Groups',
+        groupobjectclass => 'posixGroup',
+        groupobjectfilter => '(objectclass=posixGroup)',
+        groupmemberattr => 'memberUid',
         sync => '0 * * * *'
     });
-    $settings{'driver'} = 'Openldap';
+    $settings{'driver'} = 'Openldap2';
     $settings{'name'} = 'NethServer LDAP';
 } elsif($sssd->isAD) {
     $settings{'auth-settings'} = encode_json ({
