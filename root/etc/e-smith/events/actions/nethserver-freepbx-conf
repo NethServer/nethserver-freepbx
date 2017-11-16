@@ -67,5 +67,10 @@ sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/opt/rh/rh-php56/php.ini
 #Use bash shell for asterisk user
 echo "Making sure asterisk user has bash as shell" >> /var/log/freepbx_rpm_install.log
 /usr/sbin/usermod --shell /bin/bash asterisk &>> /var/log/freepbx_rpm_install.log
+#Check Asterisk user has home dir
+if [[ ! -d /home/asterisk ]]; then
+    echo "Creating Asterisk user home dir" >> /var/log/freepbx_rpm_install.log
+    /usr/sbin/mkhomedir_helper asterisk &>> /var/log/freepbx_rpm_install.log
+fi
 
 exit 0
