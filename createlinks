@@ -66,3 +66,6 @@ templates2events("/etc/httpd/conf.d/freepbx.conf", "interface-update");
 event_services($event, qw(
     httpd reload
 ));
+
+# sync freepbx users after user create
+event_link("nethserver-freepbx-userman-sync", "user-create", "91");
