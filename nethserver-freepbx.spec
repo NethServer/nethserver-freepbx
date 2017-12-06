@@ -5,6 +5,7 @@ Summary: NethServer configuration for FreePBX
 License: GPL
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
+URL: %{url_prefix}/%{name}
 
 BuildRequires: nethserver-devtools
 BuildRequires: systemd
