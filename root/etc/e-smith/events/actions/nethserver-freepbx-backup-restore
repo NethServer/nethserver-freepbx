@@ -66,6 +66,9 @@ if ( -r "$astdir/asterisk.dump")
 	#require "apply changes"
 	system("/usr/bin/mysql asterisk --defaults-file=/root/.my.cnf -e 'update admin set value=\"true\" where variable=\"need_reload\"' &> /dev/null");
 	unlink "$astdir/asterisk.dump";
+        my $managerpwd = `/usr/bin/mysql --defaults-file=/root/.my.cnf -BN asterisk -e 'select value from freepbx_settings where keyword = "AMPMGRPASS"'`;
+        $managerpwd =~ s/\n//;
+        system("/usr/bin/sed -i 's/^secret = .*/secret = ".$managerpwd."/g' /etc/asterisk/manager.conf");
 } else {
     print ("[INFO] Asterisk mysql database backup doesn't exist\n");
 }
