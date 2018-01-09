@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.3
+Version: 14.0.4
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Jan 09 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.4-1
+- nethserver-freepbx: backup restore fails - Bug NethServer/dev#5402
+
 * Fri Nov 17 2017 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.3-1
 - Make sure Aterisk home directory exists - NethServer/nethserver-freepbx#35
 
