@@ -66,3 +66,15 @@ templates2events("/etc/httpd/conf.d/freepbx.conf", "interface-update");
 event_services($event, qw(
     httpd reload
 ));
+
+#
+# trusted-networks-modify
+#
+
+$event = "trusted-networks-modify";
+
+templates2events("/etc/httpd/conf.d/freepbx.conf",$event);
+event_services($event, qw(
+    httpd reload
+));
+
