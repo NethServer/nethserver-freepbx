@@ -73,4 +73,7 @@ if [[ ! -d /home/asterisk ]]; then
     /usr/sbin/mkhomedir_helper asterisk &>> /var/log/freepbx_rpm_install.log
 fi
 
+# Avoid loginctl stale sessions for asterisk user
+loginctl enable-linger asterisk
+
 exit 0
