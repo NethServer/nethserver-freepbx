@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.4
+Version: 14.0.5
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Jan 23 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.5-1
+- FreePBX doesn't apply modifications to trusted networks - Bug NethServer/dev#5410
+
 * Tue Jan 09 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.4-1
 - nethserver-freepbx: backup restore fails - Bug NethServer/dev#5402
 
