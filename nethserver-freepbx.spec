@@ -60,6 +60,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config(noreplace) /etc/sysconfig/httpd-fpbx
 %config /etc/dahdi/system.conf
 
+
 %changelog
 * Wed Oct 25 2017 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.2-1
 - Configure voicemail ODBC storage NethServer/dev#5363
