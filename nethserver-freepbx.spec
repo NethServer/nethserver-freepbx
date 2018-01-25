@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.5
+Version: 14.0.6
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Thu Jan 25 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.6-1
+- PBX: Asterisk logs aren't rotated - Bug NethServer/dev#5411
+- PBX: /run/systemd/sessions is filled by sessions files in closing state - Bug NethServer/dev#5412
+
 * Tue Jan 23 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.5-1
 - FreePBX doesn't apply modifications to trusted networks - Bug NethServer/dev#5410
 
