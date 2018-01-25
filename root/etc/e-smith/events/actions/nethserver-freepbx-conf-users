@@ -42,22 +42,43 @@ $password = `/usr/bin/php -r "echo json_encode('$passwordUnicode');"`;
 $password =~ s/^"|"$//g;
 
 if ($sssd->isLdap) {
-    my $userdn = $sssd->bindDN;
     $settings{'auth-settings'} = encode_json ({
         host => $sssd->host,
         port => $sssd->port,
-        tls => ($security = 'tls' ? JSON::true : JSON::false),
-        ssl => ($security = 'ssl' ? JSON::true : JSON::false),
         basedn => $sssd->baseDN,
-        username => $sssd->bindUser,
+        username => $sssd->bindDN,
         password => $password,
-        userident => 'cn',
         displayname => 'gecos',
-        userdn => $sssd->baseDN,
+        userdn => 'ou=People',
+        connection => $security,
+        localgroups => '0',
+        createextensions => '',
+        externalidattr => 'entryUUID',
+        descriptionattr => 'description',
+        commonnameattr => 'uid',
+        userobjectclass => 'posixAccount',
+        userobjectfilter => '(objectclass=posixAccount)',
+        usernameattr => 'uid',
+        userfirstnameattr => 'givenName',
+        userlastnameattr => 'sn',
+        userdisplaynameattr => 'gecos',
+        usertitleattr => '',
+        usercompanyattr => '',
+        usercellphoneattr => '',
+        userworkphoneattr => 'telephoneNumber',
+        userhomephoneattr => 'homephone',
+        userfaxphoneattr => 'facsimileTelephoneNumber',
+        usermailattr => 'mail',
+        usergroupmemberattr => 'memberOf',
         la => '',
+        groupnameattr => 'cn',
+        groupdnaddition => 'ou=Groups',
+        groupobjectclass => 'posixGroup',
+        groupobjectfilter => '(objectclass=posixGroup)',
+        groupmemberattr => 'memberUid',
         sync => '0 * * * *'
     });
-    $settings{'driver'} = 'Openldap';
+    $settings{'driver'} = 'Openldap2';
     $settings{'name'} = 'NethServer LDAP';
 } elsif($sssd->isAD) {
     $settings{'auth-settings'} = encode_json ({
@@ -106,17 +127,21 @@ my $dbh = DBI->connect("DBI:mysql:database=asterisk;host=localhost","root",$mysq
 if ($sssd->isLdap or $sssd->isAD) {
     # Check if there is a NethServer AD or LDAP already configured and gets its id
     my $id;
-    my $sth = $dbh->prepare("SELECT id,name FROM `userman_directories` WHERE `name` LIKE 'NethServer LDAP%' OR `name` LIKE 'NethServer AD%'");
+    my $sth = $dbh->prepare("SELECT id,name,driver FROM `userman_directories` WHERE `name` LIKE 'NethServer LDAP%' OR `name` LIKE 'NethServer AD%'");
     $sth->execute();
     if (my $ref = $sth->fetchrow_hashref()) {
         $id = $ref->{'id'};
-        if (($ref->{'name'} eq 'NethServer LDAP') or ($ref->{'name'} eq 'NethServer AD')) {
-            # Update configuration
+        if ((($ref->{'name'} eq 'NethServer LDAP') or ($ref->{'name'} eq 'NethServer AD')) and ($ref->{'driver'} ne 'Openldap')) {
+            # Update configuration if name in NethServer LDAP or NethServer AD but LDAP driver isn't legacy Openldap
             $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id."");
             $dbh->do("UPDATE IGNORE `userman_directories` SET `name`='" . $settings{'name'} . "',`driver`='" . $settings{'driver'} . "', `active`=1, `order`=5, `default`=1, `locked`=0 WHERE `name`='" . $ref->{'name'} . "'");
-        }
+        } elsif (($ref->{'driver'} eq 'Openldap') and ($ref->{'name'} eq 'NethServer LDAP')) {
+	    # Change driver name to NethServer LDAP legacy if directory is configured with LDAP legacy driver
+	    $dbh->do("UPDATE IGNORE `userman_directories` SET `name`='NethServer LDAP legacy' WHERE `name`='" . $ref->{'name'} . "'");
+	}
         $sth->finish();
     } else {
+	# Directory isn't already configured, create a new configuration
         # Set defautl to 0 for other userman_directories
         $dbh->do("UPDATE IGNORE `userman_directories` SET `default` = 0");
         # Create entry for NethServer AD/LDAP in userman_directories

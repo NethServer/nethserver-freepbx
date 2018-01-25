@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+# 
+# This script is part of NethServer.
+# 
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+# 
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+#####################################################################################
+# This script help migrating from old OpenLdap Legacy driver to new OpenLDAP driver #
+# Is only useful if you installed nethserver-freepbx <= 14.0.4                      #
+#####################################################################################
+
+USEREXT=$(mktemp)
+/usr/bin/mysql asterisk -B --silent -e "SELECT username,default_extension FROM userman_users" | awk '{print $1,"|",$2}' | sed 's/ //g' >$USEREXT
+/usr/bin/mysql asterisk -B --silent -e "UPDATE userman_directories SET name='NethServer LDAP' WHERE name='NethServer LDAP legacy'"
+/usr/bin/mysql asterisk -B --silent -e "UPDATE userman_directories SET driver='Openldap2' WHERE name='NethServer LDAP'"
+
+# clear users
+/etc/e-smith/events/actions/nethserver-freepbx-conf-users &>/dev/null
+
+# fetch new users
+/usr/bin/scl enable rh-php56 -- /usr/sbin/fwconsole userman --syncall --force --verbose
+
+# restore users default extension
+for USER in $(cat $USEREXT); do 
+    username=$(echo $USER | cut -d\| -f1)
+    defalt_extension=$(echo $USER | cut -d\| -f2)
+    if [[ "defalt_extension" != 'none' ]]; then
+        /usr/bin/mysql asterisk -B --silent -e "UPDATE userman_users SET default_extension='$defalt_extension' WHERE username='$username'"
+    fi
+done
+rm -f $USEREXT
