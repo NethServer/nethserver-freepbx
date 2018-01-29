@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.6
+Version: 14.0.7
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Mon Jan 29 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.7-1
+- nethserver-freepbx: LDAP users can't login to amp interface - Bug NethServer/dev#5369
+
 * Thu Jan 25 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.6-1
 - PBX: Asterisk logs aren't rotated - Bug NethServer/dev#5411
 - PBX: /run/systemd/sessions is filled by sessions files in closing state - Bug NethServer/dev#5412
