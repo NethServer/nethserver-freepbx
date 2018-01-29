@@ -135,4 +135,6 @@ If you have installed nethserver-freepbx before 14.0.5, and your user provider i
 
 Updating from legacy driver to the new one, allows to permit access to FreePBX interface and UCP to LDAP users, but migration isn't automatical because users would lose default extension associated and other custom options.
 The openldap_migration_from_legacy script, does the driver migration and restore users default_extensions. Other custom users options could be lost anyway.
-To execute migration, launch `# /usr/src/freepbx/openldap_migration_from_legacy`
+To execute migration, launch: ::
+
+  /usr/src/freepbx/openldap_migration_from_legacy
