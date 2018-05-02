@@ -20,6 +20,7 @@
 # along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+use strict;
 use JSON;
 use Encode;
 use esmith::ConfigDB;
@@ -38,7 +39,7 @@ if ($sssd->port == 636) {
     $security = 'tls';
 }
 
-$password = decode('UTF-8',$sssd->bindPassword);
+my $password = decode('UTF-8',$sssd->bindPassword);
 
 if ($sssd->isLdap) {
     $settings{'auth-settings'} = JSON->new()->ascii()->encode ({
@@ -168,7 +169,7 @@ if ($sssd->isLdap or $sssd->isAD) {
 }
 
 # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
-$ret = $? >> 8;
+my $ret = $? >> 8;
 if ( $ret == 1) {
     $ret = 0;
 }
