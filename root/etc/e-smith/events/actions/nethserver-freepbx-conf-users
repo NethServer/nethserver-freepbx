@@ -20,7 +20,9 @@
 # along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+use strict;
 use JSON;
+use Encode;
 use esmith::ConfigDB;
 use NethServer::SSSD;
 use DBI;
@@ -37,12 +39,10 @@ if ($sssd->port == 636) {
     $security = 'tls';
 }
 
-$passwordUnicode = $sssd->bindPassword;
-$password = `/usr/bin/php -r "echo json_encode('$passwordUnicode');"`;
-$password =~ s/^"|"$//g;
+my $password = decode('UTF-8',$sssd->bindPassword);
 
 if ($sssd->isLdap) {
-    $settings{'auth-settings'} = encode_json ({
+    $settings{'auth-settings'} = JSON->new()->ascii()->encode ({
         host => $sssd->host,
         port => $sssd->port,
         basedn => $sssd->baseDN,
@@ -81,7 +81,7 @@ if ($sssd->isLdap) {
     $settings{'driver'} = 'Openldap2';
     $settings{'name'} = 'NethServer LDAP';
 } elsif($sssd->isAD) {
-    $settings{'auth-settings'} = encode_json ({
+    $settings{'auth-settings'} = JSON->new()->ascii()->encode ({
         host => $sssd->host,
         port => $sssd->port,
         dn => $sssd->userDN,
@@ -133,7 +133,8 @@ if ($sssd->isLdap or $sssd->isAD) {
         $id = $ref->{'id'};
         if ((($ref->{'name'} eq 'NethServer LDAP') or ($ref->{'name'} eq 'NethServer AD')) and ($ref->{'driver'} ne 'Openldap')) {
             # Update configuration if name in NethServer LDAP or NethServer AD but LDAP driver isn't legacy Openldap
-            $dbh->do("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`='" . $settings{'auth-settings'} . "',`type`='json-arr' WHERE `id`=".$id."");
+            my $sth = $dbh->prepare("UPDATE IGNORE kvstore_FreePBX_modules_Userman SET `key`='auth-settings', `val`=?,`type`='json-arr' WHERE `id`=?");
+            $sth->execute( $settings{'auth-settings'},$id );
             $dbh->do("UPDATE IGNORE `userman_directories` SET `name`='" . $settings{'name'} . "',`driver`='" . $settings{'driver'} . "', `active`=1, `order`=5, `default`=1, `locked`=0 WHERE `name`='" . $ref->{'name'} . "'");
         } elsif (($ref->{'driver'} eq 'Openldap') and ($ref->{'name'} eq 'NethServer LDAP')) {
 	    # Change driver name to NethServer LDAP legacy if directory is configured with LDAP legacy driver
@@ -152,7 +153,8 @@ if ($sssd->isLdap or $sssd->isAD) {
         $id = $ref->{'id'};
         $sth->finish();
         # Create configuration
-        $dbh->do("INSERT INTO kvstore_FreePBX_modules_Userman (`key`, `val`, `type`, `id`) VALUES ('auth-settings','" . $settings{'auth-settings'} . "','json-arr',".$id.")");
+        my $sth = $dbh->prepare("INSERT INTO kvstore_FreePBX_modules_Userman (`key`, `val`, `type`, `id`) VALUES ('auth-settings',?,'json-arr',?)");
+        $sth->execute( $settings{'auth-settings'},$id );
     }
     $dbh->disconnect();
 
@@ -167,7 +169,7 @@ if ($sssd->isLdap or $sssd->isAD) {
 }
 
 # HACK: "fwconsole userman sync" will return 1 if there is no user insidethe the LDAP
-$ret = $? >> 8;
+my $ret = $? >> 8;
 if ( $ret == 1) {
     $ret = 0;
 }
