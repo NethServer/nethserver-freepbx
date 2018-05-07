@@ -1,1 +1,2 @@
 directory = /var/lib/php/session
+directory = /var/log/asterisk
