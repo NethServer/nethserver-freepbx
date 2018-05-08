@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.7
+Version: 14.0.8
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue May 08 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.8-1
+- nethserver-freepbx: wrong log directory permissions - Bug NethServer/dev#5483
+- nethserver-freepbx: automatic bind fails if bind password starts with $ - Bug NethServer/dev#5464
+
 * Mon Jan 29 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.7-1
 - nethserver-freepbx: LDAP users can't login to amp interface - Bug NethServer/dev#5369
 
