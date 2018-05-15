@@ -1,0 +1,13 @@
+{
+    #
+    # bug5492 -- Open 5061 TCP from local networks
+    #
+
+    my $propval = $DB->get_prop('asterisk', 'TCPPorts') || return ''; # Can't get asterisk TCPPorts prop, nothing to do
+
+    if ( ! grep(/5061/, $propval) ) {
+        $DB->set_prop('asterisk', 'TCPPorts', $propval.',5061');
+    }
+
+    '';
+}
