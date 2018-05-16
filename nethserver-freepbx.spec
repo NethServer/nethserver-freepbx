@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.8
+Version: 14.0.9
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Wed May 16 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.9-1
+- nethserver-freepbx: SIP TLS access isn't open from trusted networks - Bug NethServer/dev#5492
+- Open 5061 TCP Port from local networks NethServer/dev#5492
+
 * Tue May 08 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.8-1
 - nethserver-freepbx: wrong log directory permissions - Bug NethServer/dev#5483
 - nethserver-freepbx: automatic bind fails if bind password starts with $ - Bug NethServer/dev#5464
