@@ -6,6 +6,8 @@ Wants=systemd-modules-load.service
 [Service]
 Type=simple
 Environment=HOME=/var/lib/asterisk
+Environment=PATH=/opt/rh/rh-php56/root/usr/bin:/opt/rh/rh-php56/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=LD_LIBRARY_PATH=/opt/rh/rh-php56/root/usr/lib64
 WorkingDirectory=/var/lib/asterisk
 RuntimeDirectory=asterisk
 RuntimeDirectoryMode=0775
