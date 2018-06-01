@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.9
+Version: 14.0.10
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri Jun 01 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.10-1
+- nethserver-freepbx: use php 5.6 to execute Asterisk AGI - Bug NethServer/dev#5499
+
 * Wed May 16 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.9-1
 - nethserver-freepbx: SIP TLS access isn't open from trusted networks - Bug NethServer/dev#5492
 - Open 5061 TCP Port from local networks NethServer/dev#5492
