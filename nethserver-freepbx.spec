@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.10
+Version: 14.0.11
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Thu Jul 12 2018 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.0.11-1
+- Virtualhosts: freepbx wrongly included inside the data backup - Bug NethServer/dev#5540
+
 * Fri Jun 01 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.10-1
 - nethserver-freepbx: use php 5.6 to execute Asterisk AGI - Bug NethServer/dev#5499
 
