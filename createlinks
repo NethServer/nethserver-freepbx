@@ -78,3 +78,10 @@ event_services($event, qw(
     httpd reload
 ));
 
+#
+# expand list of directory to backup before backup data
+#
+
+$event = "pre-backup-data";
+
+templates2events("/etc/backup-data.d/freepbx.include",$event);
