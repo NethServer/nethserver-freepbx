@@ -1,0 +1,9 @@
+{
+    $OUT = '';
+    @files = </var/lib/asterisk/sounds/*> ;
+    foreach my $file (@files) {
+        if ( -d $file . '/custom') {
+            $OUT .= $file . '/custom' . "\n";
+        }
+    }
+}
