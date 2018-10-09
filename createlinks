@@ -85,3 +85,10 @@ event_services($event, qw(
 $event = "pre-backup-data";
 
 templates2events("/etc/backup-data.d/freepbx.include",$event);
+
+#
+# nethserver-sssd-save event
+#
+event_actions('nethserver-sssd-save', qw(
+    nethserver-freepbx-conf-users       60
+));
