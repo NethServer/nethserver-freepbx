@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.12
+Version: 14.0.13
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Oct 30 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.13-1
+- Package nethserver-X must subscribe nethserver-sssd-save - NethServer/dev#5600
+- Removed useless file
+
 * Fri Jul 20 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.12-1
 - nethserver-freepbx: wrong path for audio files in backup-data - Bug NethServer/dev#5550
 
