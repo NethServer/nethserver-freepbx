@@ -1,0 +1,64 @@
+#!/bin/env bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - support@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Check DB version
+DBVERSION=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asterisk -e 'SELECT value FROM admin WHERE variable = "version"' 2>/dev/null)
+
+if [[ $DBVERSION == 2.10.* ]] ; then
+    # Old version installed
+    # copy audio files
+    /usr/bin/mkdir -p /var/lib/asterisk/sounds/it/custom /var/lib/asterisk/moh/
+    /usr/bin/chown asterisk:asterisk /var/lib/asterisk/sounds/it/custom /var/lib/asterisk/moh/
+
+    mv /var/lib/asterisk/mohmp3/* /var/lib/asterisk/moh/ 2>/dev/null
+    mv /var/lib/asterisk/sounds/custom/* /var/lib/asterisk/sounds/it/custom 2>/dev/null
+
+    # Backup database
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'CREATE DATABASE asterisk11'
+    /usr/bin/mysqldump --defaults-file=/root/.my.cnf -R asterisk | /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk11
+    EXIT1=$?
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'CREATE DATABASE asteriskcdrdb11'
+    /usr/bin/mysqldump --defaults-file=/root/.my.cnf -R asteriskcdrdb | /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb11
+    EXIT2=$?
+
+    # check DB has been copied
+    if [[ $EXIT1 != 0 || $EXIT2 != 0 ]] ; then
+        echo $(/usr/bin/date +"%b %d %T ")"Error while coping DBs" >&2
+        /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asterisk11'
+        /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asteriskcdrdb11'
+        exit 1
+    fi
+
+    echo "Old asterisk database copied to asterisk11"
+    echo "Old asteriskcdrdb database copied to asteriskcdrdb11"
+
+    # Grants for the old DB
+    OLDBPASS=$(perl -e "use NethServer::Password; my \$password = NethServer::Password::store('asteriskOldDB') ; printf \$password;")
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asterisk11 -e "GRANT ALL PRIVILEGES ON asterisk11.* TO migration@localhost IDENTIFIED BY '$OLDBPASS'"
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asteriskcdrdb11 -e "GRANT ALL PRIVILEGES ON asteriskcdrdb11.* TO migration@localhost IDENTIFIED BY '$OLDBPASS'"
+
+
+    # Drop asterisk DB
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asterisk'
+    /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asteriskcdrdb'
+fi
+
