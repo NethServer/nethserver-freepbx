@@ -20,8 +20,16 @@
 # along with NethServer.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+BACKUPFILE='/var/lib/asterisk/asterisk.dump'
+
 # Check DB version
-DBVERSION=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asterisk -e 'SELECT value FROM admin WHERE variable = "version"' 2>/dev/null)
+if [[ -f $BACKUPFILE && $(grep "('version','[0-9]*\.[0-9]*\.[0-9]*')" $BACKUPFILE) && ! $(/usr/bin/mysql --defaults-file=/root/.my.cnf asterisk -e "show tables" 2>/dev/null) ]] ; then
+    DBVERSION=$(grep "('version','[0-9]*\.[0-9]*\.[0-9]*')" $BACKUPFILE | sed "s/.*('version','\([0-9]*\.[0-9]*\.[0-9]*\)').*/\1/")
+    FROMBACKUP=1
+else
+    DBVERSION=$(/usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asterisk -e 'SELECT value FROM admin WHERE variable = "version"' 2>/dev/null)
+    FROMBACKUP=0
+fi
 
 if [[ $DBVERSION == 2.10.* ]] ; then
     # Old version installed
@@ -34,7 +42,11 @@ if [[ $DBVERSION == 2.10.* ]] ; then
 
     # Backup database
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'CREATE DATABASE asterisk11'
-    /usr/bin/mysqldump --defaults-file=/root/.my.cnf -R asterisk | /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk11
+    if [[ $FROMBACKUP == 1 ]] ; then
+        /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk11 < $BACKUPFILE
+    else
+        /usr/bin/mysqldump --defaults-file=/root/.my.cnf -R asterisk | /usr/bin/mysql --defaults-file=/root/.my.cnf asterisk11
+    fi
     EXIT1=$?
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'CREATE DATABASE asteriskcdrdb11'
     /usr/bin/mysqldump --defaults-file=/root/.my.cnf -R asteriskcdrdb | /usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb11
@@ -56,9 +68,12 @@ if [[ $DBVERSION == 2.10.* ]] ; then
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asterisk11 -e "GRANT ALL PRIVILEGES ON asterisk11.* TO migration@localhost IDENTIFIED BY '$OLDBPASS'"
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B asteriskcdrdb11 -e "GRANT ALL PRIVILEGES ON asteriskcdrdb11.* TO migration@localhost IDENTIFIED BY '$OLDBPASS'"
 
-
     # Drop asterisk DB
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asterisk'
     /usr/bin/mysql --defaults-file=/root/.my.cnf -N -B -e 'DROP DATABASE asteriskcdrdb'
+
+    if [[ $FROMBACKUP == 1 ]] ; then
+        rm -fr $BACKUPFILE
+    fi
 fi
 
