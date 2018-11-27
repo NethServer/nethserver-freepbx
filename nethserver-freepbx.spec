@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.13
+Version: 14.0.14
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Nov 27 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.14-1
+- nethserver-freepbx: filter out NethServer 6.x samba system accounts - Bug NethServer/dev#5639
+
 * Tue Oct 30 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.13-1
 - Package nethserver-X must subscribe nethserver-sssd-save - NethServer/dev#5600
 - Removed useless file
