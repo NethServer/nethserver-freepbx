@@ -57,7 +57,7 @@ if ($sssd->isLdap) {
         descriptionattr => 'description',
         commonnameattr => 'uid',
         userobjectclass => 'posixAccount',
-        userobjectfilter => '(objectclass=posixAccount)',
+        userobjectfilter => '(&(objectclass=posixAccount)(!(uid=domguests))(!(uid=domcomputers))(!(uid=nsstest))(!(uid=locals))(!(uid=domadmins)))',
         usernameattr => 'uid',
         userfirstnameattr => 'givenName',
         userlastnameattr => 'sn',
