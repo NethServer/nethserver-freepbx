@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.0.14
+Version: 14.1.0
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -62,6 +62,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri Jan 11 2019 Stefano Fancello <stefano.fancello@nethesis.it> - 14.1.0-1
+- Backup old DB during installation (#52) nethesis/dev#5454
+
 * Tue Nov 27 2018 Stefano Fancello <stefano.fancello@nethesis.it> - 14.0.14-1
 - nethserver-freepbx: filter out NethServer 6.x samba system accounts - Bug NethServer/dev#5639
 
