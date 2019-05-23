@@ -59,6 +59,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config(noreplace) /etc/asterisk/acl.conf
 %config(noreplace) /etc/asterisk/pjproject.conf
 %config(noreplace) /etc/sysconfig/httpd-fpbx
+%config(noreplace) /usr/lib/systemd/system/asterisk.service
 %config /etc/dahdi/system.conf
 
 %changelog
