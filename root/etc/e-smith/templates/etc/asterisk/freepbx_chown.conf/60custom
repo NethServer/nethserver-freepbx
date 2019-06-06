@@ -1,2 +1,3 @@
 directory = /var/lib/asterisk/sounds/en/,0755,asterisk,asterisk
 file = /etc/asterisk/http_custom.conf,0644,asterisk,asterisk
+file = /var/log/asterisk/freepbx.log,0640,asterisk,asterisk
