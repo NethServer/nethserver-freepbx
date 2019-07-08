@@ -1,0 +1,26 @@
+{
+  "id": "nethserver-freepbx",
+  "name": "FreePBX",
+  "summary": "Provides FreePBX for NethServer",
+  "description": "Provides FreePBX for NethServer",
+  "url": "",
+  "homepage": "https://github.com/NethServer/nethserver-freepbx",
+  "provides": ["nethserver-freepbx"],
+  "release": {
+    "version": "1.0.0"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/NethServer/dev/issues"
+  },
+  "author": {
+    "name": "Edoardo Spadoni",
+    "url": "https://github.com/NethServer/nethserver-freepbx",
+    "email": "edoardo.spadoni@nethesis.it"
+  },
+  "infoapi": {
+    "path": "nethserver-freepbx/read"
+  },
+  "icon": "logo.png",
+  "external": true
+}
