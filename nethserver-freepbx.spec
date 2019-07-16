@@ -4,6 +4,8 @@ Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
 Source0: %{name}-%{version}.tar.gz
+# Execute prep-sources to create Source1
+Source1:        %{name}.tar.gz
 BuildArch: noarch
 URL: %{url_prefix}/%{name}
 
@@ -34,10 +36,17 @@ perl createlinks
 %install
 rm -rf %{buildroot}
 (cd root ; find . -depth -print | cpio -dump %{buildroot})
-install -v -m 644 -D %{name}.json %{buildroot}/usr/share/cockpit/nethserver/applications/%{name}.json
-install -v -m 644 -D ui/public/logo.png %{buildroot}/usr/share/cockpit/%{name}/logo.png
-install -v -m 644 -D ui/public/manifest.json %{buildroot}/usr/share/cockpit/%{name}/manifest.json
-install -v -m 755 -D api/read %{buildroot}/usr/libexec/nethserver/api/%{name}/read
+
+mkdir -p %{buildroot}/usr/share/cockpit/%{name}/
+mkdir -p %{buildroot}/usr/share/cockpit/nethserver/applications/
+mkdir -p %{buildroot}/usr/libexec/nethserver/api/%{name}/
+
+tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/%{name}/
+
+cp -a %{name}.json %{buildroot}/usr/share/cockpit/nethserver/applications/
+cp -a api/* %{buildroot}/usr/libexec/nethserver/api/%{name}/
+chmod +x %{buildroot}/usr/libexec/nethserver/api/%{name}/*
+
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 
