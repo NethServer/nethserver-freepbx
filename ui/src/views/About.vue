@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{$t('about.title')}}</h2>
+    <h1 class="app-title">{{$t('about.title')}}</h1>
 
     <div v-if="!view.isLoaded" class="spinner spinner-lg view-spinner"></div>
     <div v-if="view.isLoaded">

@@ -33,7 +33,7 @@
             <li class="li-empty"></li>
             <router-link tag="li" to="/settings" active-class="active" class="list-group-item">
                 <a>
-                    <span class="fa fa-at"></span>
+                    <span class="fa fa-cog"></span>
                     <span class="list-group-item-value">{{$t('settings.title')}}</span>
                 </a>
             </router-link>
@@ -49,7 +49,7 @@
                     <span class="fa fa-info"></span>
                     <span class="list-group-item-value">{{$t('about.title')}}</span>
                 </a>
-            </router-link>
+            </router-link> 
         </ul>
     </nav>
     <div class="container-fluid container-cards-pf">

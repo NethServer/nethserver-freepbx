@@ -1,7 +1,8 @@
 <template>
-    <div>
-        <h2>{{$t('dashboard.title')}}</h2>
-    </div>
+  <div>
+    <h1 class="app-title">{{$t('dashboard.title')}}</h1>
+
+  </div>
 </template>
 
 <script>

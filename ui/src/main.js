@@ -24,7 +24,6 @@ import Router from 'vue-router'
 import VueToggleButton from 'vue-js-toggle-button';
 import DocInfo from "./directives/DocInfo.vue";
 import VueGoodTable from "vue-good-table";
-
 import App from './App.vue'
 import Dashboard from './views/Dashboard.vue'
 import Settings from './views/Settings.vue'
