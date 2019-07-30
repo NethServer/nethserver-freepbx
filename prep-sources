@@ -5,5 +5,11 @@
 # download langs from transifex
 
 # tar directory
-pushd ui && npm install && npm run build && cd dist && tar cvzf ../../nethserver-freepbx.tar.gz *
+set -e
+
+pushd ui
+npm install
+npm run build
 popd
+
+tar -C ui/dist -c -z -f nethserver-freepbx-cockpit.tar.gz .

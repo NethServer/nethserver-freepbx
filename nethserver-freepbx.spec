@@ -5,7 +5,7 @@ Summary: NethServer configuration for FreePBX
 License: GPL
 Source0: %{name}-%{version}.tar.gz
 # Execute prep-sources to create Source1
-Source1:        %{name}.tar.gz
+Source1: %{name}-cockpit.tar.gz
 BuildArch: noarch
 URL: %{url_prefix}/%{name}
 
