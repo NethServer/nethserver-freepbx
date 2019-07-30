@@ -1,0 +1,101 @@
+#!/usr/bin/python
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+import sys
+import fileinput
+import subprocess
+import simplejson
+
+def update_external_access(input_json):
+    allow_external_iax = input_json['allowExternalIAX']
+    allow_external_sips = input_json['allowExternalSIPS']
+
+    try:
+        command_args = [ '/sbin/e-smith/config', 'setprop', 'asterisk', 'AllowExternalIAX', allow_external_iax, 'AllowExternalSIPS', allow_external_sips ]
+        process = subprocess.Popen(command_args, stdout=subprocess.PIPE)
+        output, error = process.communicate()
+    except Exception, e:
+        return "Error updating asterisk configuration"
+
+    # signal-event firewall-adjust
+    try:
+        bash_command = "/sbin/e-smith/signal-event -j firewall-adjust"
+        process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        return_code = process.returncode
+
+        if return_code != 0:
+            return "Event failed, see /var/log/messages"
+    except Exception, e:
+        return "Event failed, see /var/log/messages: %s" % e
+
+def update_web_interface_access(input_json):
+    web_interface_access_list = input_json['webInterfaceAccess']
+    valid_from = ''
+
+    for web_interface_access in web_interface_access_list:
+        if valid_from != '':
+            # comma separator
+            valid_from += ','
+        valid_from += web_interface_access['ipAddress'] + '/' + web_interface_access['netmask']
+
+    try:
+        command_args = [ '/sbin/e-smith/config', 'setprop', 'httpd-fpbx', 'ValidFrom', valid_from ]
+        process = subprocess.Popen(command_args, stdout=subprocess.PIPE)
+        output, error = process.communicate()
+    except Exception, e:
+        return "Error updating httpd-fpbx configuration"
+
+    # signal-event nethserver-freepbx-httpd-save
+    try:
+        bash_command = "/sbin/e-smith/signal-event -j nethserver-freepbx-httpd-save"
+        process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        return_code = process.returncode
+
+        if return_code != 0:
+            return "Event failed, see /var/log/messages"
+    except Exception, e:
+        return "Event failed, see /var/log/messages: %s" % e
+
+try:
+    line = fileinput.input()[0].rstrip()
+    input_json = simplejson.loads(line)
+    config = input_json["config"]
+
+    if config == 'externalAccess':
+        error = update_external_access(input_json)
+    elif config == 'webInterfaceAccess':
+        error = update_web_interface_access(input_json)
+    else:
+        raise ValueError('config must be one of \'externalAccess\' or \'webInterfaceAccess\'')
+
+    if error:
+        output = simplejson.dumps({'state': 'error', 'message': error})
+        print(output)
+        sys.exit(1)
+    else:
+        output = simplejson.dumps({'state': 'success'})
+        print(output)
+except Exception, e:
+    print simplejson.dumps({ 'error': "%s" % e })
+    sys.exit(1)

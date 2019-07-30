@@ -1,0 +1,6 @@
+*.rpm
+*.tar.gz
+/ui/node_modules
+/ui/dist
+.vscode
+.directory

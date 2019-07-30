@@ -29,7 +29,7 @@ import Dashboard from './views/Dashboard.vue'
 import Settings from './views/Settings.vue'
 import Logs from './views/Logs.vue'
 import About from './views/About.vue'
-
+import "./filters/filters"
 import UtilService from "./services/util"
 Vue.mixin(UtilService)
 
@@ -51,6 +51,7 @@ const router = new Router({
       { path: '/settings', component: Settings },
       { path: '/logs', component: Logs },
       { path: '/about', name: 'about', component: About },
+      { path: "*", redirect: "/" }
     ]
 })
 router.replace("/dashboard")
@@ -60,6 +61,9 @@ var app = new Vue({
     router,
     render: h => h(App)
 })
+
+var nethserver = window.nethserver;
+var $ = window.$;
 
 nethserver.fetchTranslatedStrings(function (data) {
     i18n.setLocaleMessage('cockpit', data)
