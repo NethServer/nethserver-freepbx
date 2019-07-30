@@ -31,7 +31,7 @@ def update_external_access(input_json):
 
     try:
         command_args = [ '/sbin/e-smith/config', 'setprop', 'asterisk', 'AllowExternalIAX', allow_external_iax, 'AllowExternalSIPS', allow_external_sips ]
-        process = subprocess.Popen(command_args, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command_args, stdout=sys.stdout, stderr=sys.stderr)
         output, error = process.communicate()
     except Exception, e:
         return "Error updating asterisk configuration"
@@ -39,7 +39,7 @@ def update_external_access(input_json):
     # signal-event firewall-adjust
     try:
         bash_command = "/sbin/e-smith/signal-event -j firewall-adjust"
-        process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+        process = subprocess.Popen(bash_command.split(), stdout=sys.stdout, stderr=sys.stderr)
         output, error = process.communicate()
         return_code = process.returncode
 
@@ -60,7 +60,7 @@ def update_web_interface_access(input_json):
 
     try:
         command_args = [ '/sbin/e-smith/config', 'setprop', 'httpd-fpbx', 'ValidFrom', valid_from ]
-        process = subprocess.Popen(command_args, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command_args, stdout=sys.stdout, stderr=sys.stderr)
         output, error = process.communicate()
     except Exception, e:
         return "Error updating httpd-fpbx configuration"
@@ -68,7 +68,7 @@ def update_web_interface_access(input_json):
     # signal-event nethserver-freepbx-httpd-save
     try:
         bash_command = "/sbin/e-smith/signal-event -j nethserver-freepbx-httpd-save"
-        process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+        process = subprocess.Popen(bash_command.split(), stdout=sys.stdout, stderr=sys.stderr)
         output, error = process.communicate()
         return_code = process.returncode
 
