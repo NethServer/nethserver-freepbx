@@ -138,3 +138,138 @@ The openldap_migration_from_legacy script, does the driver migration and restore
 To execute migration, launch: ::
 
   /usr/src/freepbx/openldap_migration_from_legacy
+
+
+Cockpit API
+===========
+
+settings/read
+---------------
+
+This api returns ``asterisk`` and ``httpd-fpbx`` configuration.
+
+Input
+^^^^^
+
+- ``config``: ``asterisk`` or ``httpd-fpbx``
+
+Input example (asterisk)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "config": "asterisk"
+  }
+
+Output example (asterisk)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "configuration": {
+      "type": "service",
+      "name": "asterisk",
+      "props": {
+        "status": "enabled",
+        "TCPPorts": "5060,5061,5038,8088,8089",
+        "AllowExternalIAX": "disabled",
+        "access": "green",
+        "AllowExternalSIPS": "enabled",
+        "AllowExternalWebRTC": "disabled",
+        "UDPPorts": "4569,5036,5060,5160,10000:20000"
+      }
+    }
+  }
+
+Input example (httpd-fpbx)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "config": "httpd-fpbx"
+  }
+
+Output example (httpd-fpbx)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "configuration": {
+      "type": "service",
+      "name": "httpd-fpbx",
+      "props": {
+        "status": "enabled",
+        "access": "green",
+        "ValidFrom": "10.20.30.40/255.255.255.0,10.0.0.5/255.255.255.0"
+      }
+    }
+  }
+
+settings/validate
+------------------
+
+This api validates an IP address allowed to access PBX web interface
+
+Input
+^^^^^
+
+- ``ipAddress``: an IP address
+- ``netmask``: a network netmask
+
+Input example
+^^^^^^^^^^^^^^
+::
+
+  {
+    "ipAddress": "10.20.30.40",
+    "netmask": "255.255.255.0"
+  }
+
+Output example
+^^^^^^^^^^^^^^^
+::
+
+  {
+    "state": "success"
+  }
+
+settings/update
+-----------------
+
+This api updates ``asterisk`` and ``httpd-fpbx`` configuration.
+
+Input
+^^^^^
+
+- ``config``: ``externalAccess`` or ``webInterfaceAccess``
+- ``allowExternalIAX``: boolean flag to enable or disable external telephony access through IAX protocol (only if ``config``: ``externalAccess``)
+- ``allowExternalSIPS``: boolean flag to enable or disable external telephony access through secure SIP TLS protocol (only if ``config``: ``externalAccess``)
+- ``webInterfaceAccess``: list of IP addresses and netmasks allowed to access PBX web interface (only if ``config``: ``webInterfaceAccess``)
+
+Input example (externalAccess)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "config": "externalAccess",
+    "allowExternalIAX": "enabled",
+    "allowExternalSIPS": "enabled"
+  }
+
+Input example (webInterfaceAccess)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+::
+
+  {
+    "config": "webInterfaceAccess",
+    "webInterfaceAccess": [
+      {
+        "ipAddress": "5.6.7.8",
+        "netmask": "255.255.255.0"
+      },
+      {
+        "ipAddress": "10.20.30.40",
+        "netmask": "255.255.255.0"
+      }
+    ]
+  }
