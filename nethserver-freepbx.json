@@ -14,13 +14,9 @@
     "url": "https://github.com/NethServer/dev/issues"
   },
   "author": {
-    "name": "Edoardo Spadoni",
+    "name": "Sebastian Marius Besel, Andrea Leardini",
     "url": "https://github.com/NethServer/nethserver-freepbx",
-    "email": "edoardo.spadoni@nethesis.it"
+    "email": "sebastian.besel@nethesis.it, andrea.leardini@nethesis.it"
   },
-  "infoapi": {
-    "path": "nethserver-freepbx/read"
-  },
-  "icon": "logo.png",
-  "external": true
+  "icon": "logo.png"
 }

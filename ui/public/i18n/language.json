@@ -1,0 +1,60 @@
+{
+    "settings": {
+        "title": "Settings",
+        "external_access": "External access",
+        "allow_external_iax_access": "Allow external IAX access",
+        "allow_external_sip_tls_access": "Allow external SIP TLS access",
+        "web_interface_access": "Web interface access",
+        "create_new": "Create new",
+        "network": "Network",
+        "network_mask": "Network mask",
+        "error_reading_asterisk_configuration": "Error reading asterisk configuration",
+        "error_reading_httpd_fpbx_configuration": "Error reading httpd-fpbx configuration",
+        "error_updating_configuration": "Error updating configuration",
+        "add_web_interface_access": "Add web interface access",
+        "ipAddress_validation": "Invalid IP address",
+        "netmask_validation": "Invalid netmask",
+        "ip_address": "IP address",
+        "netmask": "Netmask",
+        "create_new_access": "Create new access",
+        "no_web_interface_access": "No web interface access",
+        "no_web_interface_access_description": "You can create one by clicking on the button below",
+        "delete_web_interface_access": "Delete web interface access",
+        "delete_web_interface_access_message": "This action will permanently delete the web interface access. This cannot be undone",
+        "are_you_sure": "Are you sure",
+        "configuration_updated": "Configuration updated"
+    },
+    "about": {
+        "title": "About",
+        "website": "Web site",
+        "bug_tracker": "Bug tracker"
+    },
+    "logs": {
+        "title": "Logs",
+        "start_follow_button": "Follow",
+        "stop_follow_button": "Stop following",
+        "filter_label": "Regexp filter"
+    },
+    "dashboard":{
+        "title": "Dashboard",
+        "freepbx_admin_dashboard": "FreePBX Admin Dashboard",
+        "open_dashboard": "Open dashboard",
+        "freepbx_description": "FreePBX is a GUI that gives you the ability to manage your Asterisk system."
+    },
+    "docs": {
+        "allow_external_iax_access": "Allow external telephony access through IAX protocol",
+        "allow_external_sip_tls_access": "Allow external telephony access through secure SIP TLS protocol"
+    },
+    "actions": "Actions",
+    "delete": "Delete",
+    "next": "Next",
+    "prev": "Previous",
+    "of": "of",
+    "rows_per_page": "Row per page",
+    "search": "Search",
+    "all": "All",
+    "save": "Save",
+    "cancel": "Cancel",
+    "warning": "Warning",
+    "create": "Create"
+}
