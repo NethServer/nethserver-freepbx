@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.1.1
+Version: 14.2.0
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -75,6 +75,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Thu Aug 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.0-1
+- FreePBX Cockpit UI - NethServer/dev#5791
+
 * Thu Feb 07 2019 Stefano Fancello <stefano.fancello@nethesis.it> - 14.1.1-1
 - FreePBX: "apply changes" timeout on slower machines - Bug NethServer/dev#5707
 - nethserver-freepbx: can't upload audio files, modules or musics bigger than 2 Mb - Bug NethServer/dev#5701
