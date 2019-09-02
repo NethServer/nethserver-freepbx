@@ -7,7 +7,7 @@
   "homepage": "https://github.com/NethServer/nethserver-freepbx",
   "provides": ["nethserver-freepbx"],
   "release": {
-    "version": "1.0.0"
+    "version": "_RELEASE_"
   },
   "license": "GPL-3.0",
   "bugs": {
