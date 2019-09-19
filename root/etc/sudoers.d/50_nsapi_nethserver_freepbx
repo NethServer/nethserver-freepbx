@@ -1,0 +1,10 @@
+#
+# nsapi_nethserver_freepbx
+#
+Cmnd_Alias NSAPI_NETHSERVER_FREEPBX = \
+    /usr/libexec/nethserver/api/nethserver-freepbx/settings/read, \
+    /usr/libexec/nethserver/api/nethserver-freepbx/settings/update, \
+    /usr/libexec/nethserver/api/nethserver-freepbx/settings/validate, \
+    /usr/libexec/nethserver/api/nethserver-freepbx/read
+
+Defaults!NSAPI_NETHSERVER_FREEPBX !requiretty
