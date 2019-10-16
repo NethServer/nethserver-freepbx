@@ -25,8 +25,14 @@
     <h1>{{$t('logs.title')}}</h1>
     <form class="form-horizontal">
       <div class="form-group">
-        <div class="col-xs-12 col-sm-3 col-md-2">
-          <select id="selectLogPath" class="selectpicker form-control" v-model="view.path" v-on:change="handleLogs()">
+        <div class="col-xs-12 col-sm-3 col-md-4">
+          <select
+            id="selectLogPath"
+            class="combobox form-control"
+            v-model="view.path"
+            v-on:change="handleLogs()"
+            :disabled="view.follow"
+          >
             <option selected>/var/log/asterisk/full</option>
           </select>
         </div>
@@ -45,22 +51,28 @@
         <div class="search-pf-input-group">
           <label for="search1" class="sr-only">Search</label>
           <input
-              v-model.lazy="view.filter"
-              v-on:change="handleLogs()"
-              v-bind:placeholder="$t('logs.filter_label')"
-              id="log-filter"
-              class="filter form-control"
-              type="search"
+            v-model="view.filter"
+            v-bind:placeholder="$t('logs.filter_label')"
+            id="log-filter"
+            class="filter form-control"
+            type="search"
           >
-          <button type="button" class="clear" aria-hidden="true"><span class="pficon pficon-close"></span></button>
+          <button type="button" class="clear" aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+          </button>
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-primary" type="button"><span class="fa fa-search"></span></button>
+        <button class="btn btn-primary" type="submit" @click="handleLogs()">
+          <span class="fa fa-search"></span>
+        </button>
       </div>
     </form>
     <div v-if="!view.logsLoaded" id="loader" class="spinner spinner-lg view-spinner"></div>
-    <pre v-else id="logs-output" class="logs">{{view.logsContent}}</pre>
+    <div v-else>
+      <pre v-if="view.logsContent" id="logs-output" class="logs">{{view.logsContent}}</pre>
+      <pre v-else id="logs-output" class="logs">-- No entries --</pre>
+    </div>
   </div>
 </template>
 
@@ -69,7 +81,6 @@ export default {
   name: "Logs",
   mounted() {
     var context = this;
-    window.jQuery('#selectLogPath').selectpicker();
     (function($) {
       $(document).ready(function() {
         // Hide the clear button if the search input is empty
@@ -159,7 +170,7 @@ export default {
           context.view.logsLoaded = true;
           context.logsContent = error;
         },
-        false
+        true
       );
     }
   }
