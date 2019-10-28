@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.3
+Version: 14.2.4
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -76,6 +76,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %config /etc/dahdi/system.conf
 
 %changelog
+* Mon Oct 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.4-1
+- Logs page in Cockpit - Bug NethServer/dev#5866
+
 * Tue Oct 01 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.3-1
 - Sudoers based authorizations for Cockpit UI - NethServer/dev#5805
 
