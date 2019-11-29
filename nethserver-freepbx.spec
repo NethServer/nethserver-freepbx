@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.4
+Version: 14.2.5
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -80,6 +80,9 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri Nov 29 2019 Stefano Fancello <stefano.fancello@nethesis.it> - 14.2.5-1
+- nethserver-freepbx: user configuration fails on new installations - Bug NethServer/dev#5967
+
 * Mon Oct 28 2019 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.4-1
 - Logs page in Cockpit - Bug NethServer/dev#5866
 
