@@ -6,6 +6,7 @@ License: GPL
 Source0: %{name}-%{version}.tar.gz
 # Execute prep-sources to create Source1
 Source1: %{name}-cockpit.tar.gz
+Source2: https://github.com/FreePBX/userman/archive/release/14.0.3.49.tar.gz
 BuildArch: noarch
 URL: %{url_prefix}/%{name}
 
@@ -50,6 +51,8 @@ chmod +x %{buildroot}/usr/libexec/nethserver/api/%{name}/*
 
 %{genfilelist} %{buildroot} --file /etc/sudoers.d/50_nsapi_nethserver_freepbx 'attr(0440,root,root)' > %{name}-%{version}-%{release}-filelist
 mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
+mkdir -p %{buildroot}/usr/src/freepbx/amp_conf/htdocs/admin/modules/userman
+tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/htdocs/admin/modules/userman --strip-components=1
 
 %post
 %systemd_post httpd-admin.service asterisk.service
@@ -70,6 +73,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 %attr(0700,root,root) %dir %{_localstatedir}/log/httpd-fpbx
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/access_log
 %attr(0644,root,root) %config %ghost %{_localstatedir}/log/httpd-fpbx/error_log
+%attr(0644,root,root) /usr/src/freepbx/amp_conf/htdocs/admin/modules/*
 %config(noreplace) /etc/asterisk/acl.conf
 %config(noreplace) /etc/asterisk/pjproject.conf
 %config(noreplace) /etc/sysconfig/httpd-fpbx
