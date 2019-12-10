@@ -48,8 +48,12 @@ tar xvf %{SOURCE1} -C %{buildroot}/usr/share/cockpit/%{name}/
 cp -a %{name}.json %{buildroot}/usr/share/cockpit/nethserver/applications/
 cp -a api/* %{buildroot}/usr/libexec/nethserver/api/%{name}/
 chmod +x %{buildroot}/usr/libexec/nethserver/api/%{name}/*
+mkdir -p %{buildroot}/var/lib/asterisk/moh
 
-%{genfilelist} %{buildroot} --file /etc/sudoers.d/50_nsapi_nethserver_freepbx 'attr(0440,root,root)' > %{name}-%{version}-%{release}-filelist
+%{genfilelist} %{buildroot} \
+--file /etc/sudoers.d/50_nsapi_nethserver_freepbx 'attr(0440,root,root)' \
+--dir /var/lib/asterisk/moh 'attr(0755,asterisk,asterisk)' \
+> %{name}-%{version}-%{release}-filelist
 mkdir -p %{buildroot}/%{_localstatedir}/log/httpd-fpbx
 mkdir -p %{buildroot}/usr/src/freepbx/amp_conf/htdocs/admin/modules/userman
 tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/htdocs/admin/modules/userman --strip-components=1
