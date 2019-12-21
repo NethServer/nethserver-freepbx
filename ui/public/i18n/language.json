@@ -36,7 +36,8 @@
         "filter_label": "Regexp filter"
     },
     "dashboard":{
-        "title": "Dashboard",
+        "title": "FreePBX dashboard",
+        "app": "FreePBX",
         "freepbx_admin_dashboard": "FreePBX Admin Dashboard",
         "open_dashboard": "Open dashboard",
         "freepbx_description": "FreePBX is a GUI that gives you the ability to manage your Asterisk system."

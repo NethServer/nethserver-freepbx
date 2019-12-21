@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{$t('settings.title')}}</h1>
+    <h2>{{$t('settings.title')}}</h2>
 
     <!-- error message -->
     <div v-if="errorMessage" class="alert alert-danger alert-dismissable">
