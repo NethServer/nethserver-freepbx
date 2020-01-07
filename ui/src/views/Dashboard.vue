@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{$t('dashboard.title')}}</h1>
+    <h2>{{$t('dashboard.title')}}</h2>
 
     <div class="blank-slate-pf">
       <div class="blank-slate-pf-icon">
