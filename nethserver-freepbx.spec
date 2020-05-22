@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.6
+Version: 14.2.7
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -84,6 +84,9 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri May 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.7-1
+- Cockpit: change package Dashboard page title - NethServer/dev#6004
+
 * Tue Dec 10 2019 Stefano Fancello <stefano.fancello@nethesis.it> - 14.2.6-1
 - nethserver-freepbx: wrong permission on music on hold directory - Bug NethServer/dev#5980
 
