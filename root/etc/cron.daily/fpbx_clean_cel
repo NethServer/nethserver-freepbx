@@ -21,4 +21,4 @@
 #
 
 # Cleanup CEL records older than 180 days
-/usr/bin/mysql asteriskcdrdb  --defaults-file=/root/.my.cnf -e 'DELETE  FROM `cel` WHERE `eventtime` < NOW() - INTERVAL 180 DAY' &>/dev/null
+/usr/bin/mysql --defaults-file=/root/.my.cnf asteriskcdrdb -e 'DELETE  FROM `cel` WHERE `eventtime` < NOW() - INTERVAL 180 DAY' &>/dev/null
