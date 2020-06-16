@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.7
+Version: 14.2.8
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -84,6 +84,9 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Jun 16 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.8-1
+- FreePBX: CEL table isn't cleaned as it should and it gets too big - Bug NethServer/dev#6204
+
 * Fri May 22 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.7-1
 - Cockpit: change package Dashboard page title - NethServer/dev#6004
 
