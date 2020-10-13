@@ -44,8 +44,6 @@ if ( -r "$astdir/astdb.sqlite3.dump")
 	}
 	system ("/usr/bin/systemctl start asterisk");
 	unlink "$astdir/astdb.sqlite3.dump";
-	#regenerate device in asterisk DB;
-	system ("/var/lib/asterisk/bin/reset_astdb");
 } else {
 	print ("[INFO] Astdb backup doesn't exist\n");
 }
