@@ -36,13 +36,6 @@ mkdir -p /var/lib/asterisk/sounds/custom/
 
 # wait for asterisk
 systemctl start asterisk
-for i in $(seq 0 300); do
-    /usr/sbin/asterisk -rx "core show version" &>> /dev/null
-    if [[ $(echo $?) == 0 ]] ; then
-        break
-    fi
-    sleep 1
-done
 
 touch /var/log/asterisk/fail2ban
 touch /var/log/asterisk/freepbx_security.log
