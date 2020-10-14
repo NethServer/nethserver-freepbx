@@ -14,10 +14,10 @@ RuntimeDirectoryMode=0775
 User=asterisk
 Group=asterisk
 ExecStart=/usr/sbin/asterisk -f -C /etc/asterisk/asterisk.conf
-ExecStartPost=/bin/bash -c "while ! /usr/sbin/asterisk -rx 'core show version' &>/dev/null; do sleep 1; done"
-ExecStartPost=/bin/bash -c "while [[ $$(/usr/sbin/asterisk -rx 'core show version') != Asterisk* ]]; do sleep 1; done"
+ExecStartPost=/bin/bash -c "while ! /usr/sbin/asterisk -rx 'core show version' &>/dev/null; do sleep 1; ((++attempt<30)) || exit 2; done"
+ExecStartPost=/bin/bash -c "while [[ $$(/usr/sbin/asterisk -rx 'core show version') != Asterisk* ]]; do sleep 1; ((++attempt<30)) || exit 2; done"
 ExecStop=/usr/sbin/asterisk -rx 'core stop now'
-ExecStopPost=/bin/bash -c "while /usr/sbin/asterisk -rx 'core show version' &>/dev/null; do sleep 1; done"
+ExecStopPost=/bin/bash -c "while /usr/sbin/asterisk -rx 'core show version' &>/dev/null; do sleep 1; ((++attempt<30)) || exit 2; done"
 ExecReload=/usr/sbin/asterisk -rx 'core reload'
 
 # To emulate some of the features of the safe_asterisk script, copy
