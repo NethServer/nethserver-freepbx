@@ -14,6 +14,7 @@ RuntimeDirectoryMode=0775
 User=asterisk
 Group=asterisk
 ExecStart=/usr/sbin/asterisk -f -C /etc/asterisk/asterisk.conf
+ExecStartPost=/bin/bash -c "while [[ $$(/usr/sbin/asterisk -rx 'core show version' 2>/dev/null) != Asterisk* ]]; do ((++attempt<30)) || exit 2; sleep 1 ; done"
 ExecStop=/usr/sbin/asterisk -rx 'core stop now'
 ExecReload=/usr/sbin/asterisk -rx 'core reload'
 
