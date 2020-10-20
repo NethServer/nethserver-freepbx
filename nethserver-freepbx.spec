@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.8
+Version: 14.2.9
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -84,6 +84,10 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Tue Oct 20 2020 Davide Principi <davide.principi@nethesis.it> - 14.2.9-1
+- Asterisk is not available to FreePBX install script  - Bug NethServer/dev#6305
+- NethVoice restore config fails in new systems - Bug nethesis/dev#5885
+
 * Tue Jun 16 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.8-1
 - FreePBX: CEL table isn't cleaned as it should and it gets too big - Bug NethServer/dev#6204
 
