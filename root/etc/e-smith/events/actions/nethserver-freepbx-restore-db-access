@@ -27,7 +27,7 @@
 try {
     include_once('/etc/freepbx.conf');
 } catch (Exception $e) {
-    if (strpos($e->getMessage(), "Access denied for user 'freepbxuser'")) {
+    if (strpos($e->getMessage(), "Access denied for user 'freepbxuser'") !== false) {
         echo "[NOTICE] Fixing database access for user 'freepbuser'\n";
         $cmd = "/usr/bin/mysql mysql -e \"set password for 'freepbxuser'@'localhost' = PASSWORD('{$amp_conf['AMPDBPASS']}');\"";
         system($cmd);
