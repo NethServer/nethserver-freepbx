@@ -29,7 +29,7 @@ try {
 } catch (Exception $e) {
     if (strpos($e->getMessage(), "Access denied for user 'freepbxuser'") !== false) {
         echo "[NOTICE] Fixing database access for user 'freepbuser'\n";
-        $cmd = "/usr/bin/mysql mysql -e \"set password for 'freepbxuser'@'localhost' = PASSWORD('{$amp_conf['AMPDBPASS']}');\"";
+        $cmd = "/usr/bin/mysql --defaults-file=/root/.my.cnf mysql -e \"set password for 'freepbxuser'@'localhost' = PASSWORD('{$amp_conf['AMPDBPASS']}');\"";
         system($cmd);
    }
 }
