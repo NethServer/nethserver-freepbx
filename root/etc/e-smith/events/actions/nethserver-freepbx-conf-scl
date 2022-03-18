@@ -30,14 +30,6 @@ source /opt/rh/rh-php56/enable
 # run install
 pass=$(perl -e  'use NethServer::Password; print NethServer::Password::store('mysql');')
 
-# write modules.load file for asterisk first start
-if [[ ! -f /etc/asterisk/modules.load ]]; then
-	echo -e '[modules]\nautoload=no' > /etc/asterisk/modules.conf
-fi
-
-# Allow installation with asterisk > 17
-sed -i 's/if (version_compare($matches\[1\], "11", "lt") || version_compare($matches\[1\], "17", "ge")) {/if (version_compare($matches[1], "11", "lt") || version_compare($matches[1], "19", "ge")) {/' /usr/src/freepbx/installlib/installcommand.class.php
-
 cd /usr/src/freepbx
 ./install --dbuser root --dbpass $pass --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1
 
