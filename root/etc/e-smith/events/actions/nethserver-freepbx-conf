@@ -40,6 +40,9 @@ if [[ ! -f /etc/asterisk/modules.load ]]; then
 
 	# Allow installation with asterisk > 17
 	sed -i 's/if (version_compare($matches\[1\], "11", "lt") || version_compare($matches\[1\], "17", "ge")) {/if (version_compare($matches[1], "11", "lt") || version_compare($matches[1], "19", "ge")) {/' /usr/src/freepbx/installlib/installcommand.class.php
+
+	# Allow retrieve conf with asterisk > 17
+	sed -i 's/if (version_compare(\$version, "11", "lt") || version_compare(\$version, "17", "ge")) {/if (version_compare(\$version, "11", "lt") || version_compare(\$version, "19", "ge")) {/' /usr/src/freepbx/amp_conf/bin/retrieve_conf
 fi
 
 # wait for asterisk
