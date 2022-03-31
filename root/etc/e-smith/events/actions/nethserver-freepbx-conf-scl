@@ -29,7 +29,6 @@ source /opt/rh/rh-php56/enable
 
 # run install
 pass=$(perl -e  'use NethServer::Password; print NethServer::Password::store('mysql');')
-
 cd /usr/src/freepbx
 ./install --dbuser root --dbpass $pass --webroot /var/www/html/freepbx -n >> /var/log/freepbx_rpm_install.log 2>&1
 
