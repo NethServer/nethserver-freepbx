@@ -22,6 +22,13 @@
 
 # check if fpbx is already installed
 if [[ -f /var/www/html/freepbx/index.php ]] ; then
+    # check if installed retrieve_conf is different from the packaged one and copy it
+    diff -q /usr/src/freepbx/amp_conf/bin/retrieve_conf /var/lib/asterisk/bin/retrieve_conf
+    if [[ $? == 1 ]]; then
+        /bin/cp /usr/src/freepbx/amp_conf/bin/retrieve_conf /var/lib/asterisk/bin/retrieve_conf
+    fi
+
+    # don't launch installation since FreePBX is already installed
     exit 0
 fi
 
