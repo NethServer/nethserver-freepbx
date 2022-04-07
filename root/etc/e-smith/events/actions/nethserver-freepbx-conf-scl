@@ -22,9 +22,12 @@
 
 # check if fpbx is already installed
 if [[ -f /var/www/html/freepbx/index.php ]] ; then
-    # check if installed retrieve_conf is different from the packaged one and copy it
-    diff -q /usr/src/freepbx/amp_conf/bin/retrieve_conf /var/lib/asterisk/bin/retrieve_conf
-    if [[ $? == 1 ]]; then
+    diff -q /usr/src/freepbx/amp_conf/bin/retrieve_conf /var/lib/asterisk/bin/retrieve_conf >/dev/null
+    files_differ=$?
+    grep -q 'if (version_compare($version, "11", "lt") || version_compare($version, "17", "ge")) {' /var/lib/asterisk/bin/retrieve_conf
+    version_control=$?
+    if [[ $files_differ == 1 && $version_control == 0 ]]; then
+        echo "Patching /var/lib/asterisk/bin/retrieve_conf to allow Asterisk 18"
         /bin/cp /usr/src/freepbx/amp_conf/bin/retrieve_conf /var/lib/asterisk/bin/retrieve_conf
     fi
 
