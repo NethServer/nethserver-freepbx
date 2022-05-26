@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.2.10
+Version: 14.3.0
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -84,6 +84,9 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Thu May 26 2022 Stefano Fancello <stefano.fancello@nethesis.it> - 14.3.0-1
+- Add Asterisk 18 support - nethesis/dev#6124
+
 * Fri Dec 04 2020 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.2.10-1
 - FreePBX: no database access after data restore - Bug NethServer/dev#6352
 
