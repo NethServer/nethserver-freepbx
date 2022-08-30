@@ -97,9 +97,9 @@ event_actions('nethserver-sssd-save', qw(
     nethserver-freepbx-conf-users       60
 ));
 
-#--------------------------------------------------
-# actions for post-restore-data event
-#--------------------------------------------------
+#
+# post-restore-data event
+#
 
 $event = "post-restore-data";
 event_actions($event, 
