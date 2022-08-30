@@ -96,3 +96,12 @@ templates2events("/etc/backup-data.d/freepbx.include",$event);
 event_actions('nethserver-sssd-save', qw(
     nethserver-freepbx-conf-users       60
 ));
+
+#--------------------------------------------------
+# actions for post-restore-data event
+#--------------------------------------------------
+
+$event = "post-restore-data";
+event_actions($event, 
+   'nethserver-freepbx-fix-rsync-perms' => '10',
+);
