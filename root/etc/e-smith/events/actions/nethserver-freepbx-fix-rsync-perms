@@ -40,7 +40,7 @@ fi
 
 # if logs are included in the backup then fix their permissions too
 
-if [ "$(/sbin/e-smith/config getprop backup-data IncludeLogs)" == enabled ]; then
+if [ "$(/sbin/e-smith/config getprop backup-data IncludeLogs)" == "enabled" ]; then
   if [[ -d "/var/log/asterisk" ]]; then
     /bin/chown -R asterisk:asterisk /var/log/asterisk
   fi
