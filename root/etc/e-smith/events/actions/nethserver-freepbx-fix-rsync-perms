@@ -48,5 +48,5 @@ if [ "$(/sbin/e-smith/config getprop backup-data IncludeLogs)" == "enabled" ]; t
   if [[ -d "/var/log/pbx/" ]]; then
     /bin/chown -R asterisk:asterisk /var/log/pbx
   fi
-
+fi
 exit 0
