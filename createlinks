@@ -50,9 +50,6 @@ event_link("nethserver-freepbx-backup-restore", "post-restore-config", "80");
 #launch backup restore on package update/upgrade
 event_link("nethserver-freepbx-backup-restore", "nethserver-freepbx-update", "70");
 
-#set new freepbxuser db password
-event_link("nethserver-freepbx-restore-db-access", "post-restore-data", "70");
-
 #
 # nethserver-freepbx-httpd-save
 #
