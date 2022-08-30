@@ -104,4 +104,5 @@ event_actions('nethserver-sssd-save', qw(
 $event = "post-restore-data";
 event_actions($event, 
    'nethserver-freepbx-fix-rsync-perms' => '10',
+   'nethserver-freepbx-restore-db-access' => '70'
 );
