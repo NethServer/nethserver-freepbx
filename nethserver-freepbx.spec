@@ -1,5 +1,5 @@
 Name: nethserver-freepbx
-Version: 14.3.1
+Version: 14.3.2
 Release: 1%{?dist}
 Summary: NethServer configuration for FreePBX
 License: GPL
@@ -84,6 +84,9 @@ tar --exclude=".git*" -xzpf %{SOURCE2} -C %{buildroot}/usr/src/freepbx/amp_conf/
 %config /etc/dahdi/system.conf
 
 %changelog
+* Fri Jan 13 2023 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.3.2-1
+- FreePBX: update JavaScript dependencies - Bug NethServer/dev#6727
+
 * Fri Sep 02 2022 Giacomo Sanchietti <giacomo.sanchietti@nethesis.it> - 14.3.1-1
 - rsync disaster recovery introduces permissions issue - Bug NethServer/dev#6691
 
