@@ -29,13 +29,13 @@ event_actions('nethserver-freepbx-update', qw(
     nethserver-freepbx-conf-users       60
     nethserver-freepbx-set-cron-scl     60
     nethserver-freepbx-conf-voicemail   60
+    nethserver-freepbx-restart-asterisk 70
 ));
 
 event_services('nethserver-freepbx-update', qw(
     httpd restart
     httpd-fpbx restart
     rh-php56-php-fpm restart
-    asterisk restart
 ));
 
 #do backup in pre-backup
@@ -103,3 +103,13 @@ event_actions($event,
    'nethserver-freepbx-fix-rsync-perms' => '10',
    'nethserver-freepbx-restore-db-access' => '70'
 );
+
+#
+# Certificate-update event
+#
+
+$event = "certificate-update";
+
+event_actions($event, qw(
+    nethserver-freepbx-restart-asterisk 70
+));
